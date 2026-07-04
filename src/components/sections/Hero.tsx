@@ -63,9 +63,6 @@ export const Hero = () => {
               </Button>
             </div>
 
-            <div className="mt-10 font-mono text-xs text-muted-foreground">
-              <span className="text-primary">$</span> whoami → <span className="text-foreground">senior_cloud_devops_engineer</span>
-            </div>
           </div>
 
           <div className="relative mx-auto w-full max-w-sm">
