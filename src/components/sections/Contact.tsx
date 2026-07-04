@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { portfolio } from "@/data/portfolio";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
@@ -12,17 +13,57 @@ export const Contact = () => {
   const p = portfolio.profile;
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const message = String(data.get("message") ?? "").trim();
+    const website = String(data.get("website") ?? "").trim();
+
+    if (website) return;
+
+    if (!name || !email || !message) {
+      toast.error("Please fill in your name, email and message.");
+      return;
+    }
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      toast.error("Email service is not configured yet.");
+      return;
+    }
+
     setLoading(true);
-    const data = new FormData(e.currentTarget);
-    const subject = encodeURIComponent(`Portfolio enquiry from ${data.get("name")}`);
-    const body = encodeURIComponent(`${data.get("message")}\n\n— ${data.get("name")} (${data.get("email")})`);
-    window.location.href = `mailto:${p.email}?subject=${subject}&body=${body}`;
-    setTimeout(() => {
-      toast.success("Opening your email client…");
+
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: name,
+          from_email: email,
+          reply_to: email,
+          to_email: p.email,
+          message,
+          page_url: window.location.href,
+        },
+        { publicKey }
+      );
+
+      toast.success("Message sent. Thanks for reaching out.");
+      form.reset();
+    } catch (error) {
+      console.error("EmailJS submission failed:", error);
+      toast.error("Message could not be sent. Please email me directly.");
+    } finally {
       setLoading(false);
-    }, 400);
+    }
   };
 
   return (
@@ -69,6 +110,10 @@ export const Contact = () => {
           </div>
 
           <form onSubmit={onSubmit} className="glass rounded-2xl p-6 space-y-4">
+            <div className="hidden" aria-hidden="true">
+              <Label htmlFor="website">Website</Label>
+              <Input id="website" name="website" tabIndex={-1} autoComplete="off" />
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="name">Name</Label>
