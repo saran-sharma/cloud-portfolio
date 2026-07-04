@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design system — Azure-inspired dark-first SaaS aesthetic */
+
+@layer base {
+  :root {
+    /* Light mode */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 210 100% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 199 100% 55%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 40%;
+
+    --accent: 199 100% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 88%;
+    --input: 214 32% 88%;
+    --ring: 210 100% 45%;
+
+    --radius: 0.75rem;
+
+    --surface: 0 0% 100%;
+    --surface-elevated: 210 40% 98%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 50%), hsl(199 100% 55%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(210 100% 50% / 0.25), transparent 60%);
+    --gradient-mesh: radial-gradient(at 20% 20%, hsl(210 100% 50% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 30%, hsl(199 100% 55% / 0.12) 0px, transparent 50%),
+                     radial-gradient(at 50% 90%, hsl(220 100% 45% / 0.10) 0px, transparent 50%);
+    --shadow-glow: 0 0 40px hsl(210 100% 50% / 0.35);
+    --shadow-elegant: 0 20px 60px -20px hsl(220 60% 20% / 0.15);
+    --glass-bg: hsl(0 0% 100% / 0.6);
+    --glass-border: hsl(210 40% 90% / 0.6);
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 40% 9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 40% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 100% 60%;
+    --primary-foreground: 222 47% 6%;
+    --primary-glow: 199 100% 65%;
+
+    --secondary: 217 33% 14%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 199 100% 60%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 210 100% 60%;
+
+    --surface: 222 40% 9%;
+    --surface-elevated: 222 40% 12%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 55%), hsl(199 100% 60%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(210 100% 55% / 0.25), transparent 60%);
+    --gradient-mesh: radial-gradient(at 20% 20%, hsl(210 100% 55% / 0.18) 0px, transparent 50%),
+                     radial-gradient(at 80% 30%, hsl(199 100% 60% / 0.15) 0px, transparent 50%),
+                     radial-gradient(at 50% 90%, hsl(220 100% 55% / 0.12) 0px, transparent 50%);
+    --shadow-glow: 0 0 60px hsl(210 100% 55% / 0.45);
+    --shadow-elegant: 0 20px 60px -20px hsl(210 100% 30% / 0.35);
+    --glass-bg: hsl(222 40% 10% / 0.6);
+    --glass-border: hsl(210 40% 60% / 0.12);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .mesh-bg {
+    background-image: var(--gradient-mesh);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  }
+
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-elegant { box-shadow: var(--shadow-elegant); }
+
+  .story-link {
+    @apply relative inline-block;
+  }
+  .story-link::after {
+    content: '';
+    @apply absolute left-0 -bottom-0.5 h-0.5 w-full origin-bottom-right scale-x-0 bg-primary transition-transform duration-300;
+  }
+  .story-link:hover::after {
+    @apply origin-bottom-left scale-x-100;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-elegant;
+  }
+}
+
+@layer base {
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.5); }
+}
