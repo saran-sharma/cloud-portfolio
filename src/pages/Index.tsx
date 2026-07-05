@@ -10,6 +10,7 @@ import { TechStack } from "@/components/sections/TechStack";
 import { Blog } from "@/components/sections/Blog";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { SaranAI } from "@/components/SaranAI";
 
 const Index = () => (
   <div className="min-h-dvh bg-background text-foreground">
@@ -27,6 +28,7 @@ const Index = () => (
       <Contact />
     </main>
     <Footer />
+    <SaranAI />
   </div>
 );
 

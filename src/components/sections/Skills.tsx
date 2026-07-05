@@ -1,7 +1,7 @@
 import { portfolio } from "@/data/portfolio";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Reveal } from "@/components/Reveal";
-import { Cloud, Code2, GitBranch, Boxes, Activity, Terminal } from "lucide-react";
+import { Cloud, Code2, GitBranch, Boxes, Activity, Terminal, Database } from "lucide-react";
 
 const icons = {
   "Cloud": Cloud,
@@ -10,6 +10,7 @@ const icons = {
   "Containers & Platforms": Boxes,
   "Observability & SRE": Activity,
   "Languages & Scripting": Terminal,
+  "Data & Analytics": Database,
 } as const;
 
 export const Skills = () => (

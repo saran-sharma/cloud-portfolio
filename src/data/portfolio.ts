@@ -7,7 +7,7 @@ import p4 from "@/assets/project-4.jpg";
 export const portfolio = {
   profile: {
     name: "Saran S",
-    title: "Senior Cloud & DevOps Engineer | Platform Engineer",
+    title: "Senior Cloud & Platform Engineer",
     tagline: "Building resilient Azure platforms with automation, observability and AI-powered ops.",
     location: "Chennai, India",
     email: "saransivakumar.work@gmail.com",
@@ -20,7 +20,7 @@ export const portfolio = {
   },
   about: {
     paragraphs: [
-      "I'm a Senior Cloud & DevOps Engineer with 3+ years of hands-on experience designing, automating and operating large-scale Microsoft Azure platforms — currently at Capgemini on a Microsoft engagement.",
+      "I'm a Senior Cloud & Platform Engineer with 3+ years of hands-on experience designing, automating and operating large-scale Microsoft Azure platforms — currently at Capgemini on a Microsoft engagement.",
       "My focus is Platform Engineering: paved-road infrastructure with Terraform and ARM, golden-path CI/CD on Azure DevOps and GitHub Actions, Kubernetes on AKS, and deep observability with Azure Monitor, Log Analytics, Grafana and Prometheus.",
       "I love turning toil into code — automating governance, incident response and repetitive operations with Python and PowerShell, and increasingly leveraging AI to make on-call smarter and platforms self-healing.",
     ],
@@ -62,7 +62,7 @@ export const portfolio = {
   skills: [
     {
       category: "Cloud",
-      items: ["Microsoft Azure", "Azure RBAC", "Key Vault", "Azure Networking", "Landing Zones", "Cost Governance"],
+      items: ["Microsoft Azure", "Azure RBAC", "Key Vault", "Azure Networking", "Azure Functions", "Landing Zones", "Cost Governance"],
     },
     {
       category: "Infrastructure as Code",
@@ -79,6 +79,10 @@ export const portfolio = {
     {
       category: "Observability & SRE",
       items: ["Azure Monitor", "Log Analytics", "Grafana", "Prometheus", "Incident Management", "SLOs"],
+    },
+    {
+      category: "Data & Analytics",
+      items: ["Azure Data Factory", "Azure Synapse Analytics", "ADLS Gen2", "Databricks", "PySpark", "Microsoft Fabric", "Power BI", "SQL"],
     },
     {
       category: "Languages & Scripting",
@@ -158,6 +162,8 @@ export const portfolio = {
     "Docker", "Kubernetes", "AKS", "Helm", "Python", "PowerShell",
     "Bash", "Linux", "Azure Monitor", "Log Analytics", "Grafana", "Prometheus",
     "Jenkins", "Git", "Azure RBAC", "Key Vault", "Networking", "Azure OpenAI",
+    "Azure Data Factory", "Azure Synapse Analytics", "ADLS Gen2", "Databricks",
+    "PySpark", "Microsoft Fabric", "Power BI", "SQL", "Azure Functions",
   ],
   blog: [
     {
