@@ -5,30 +5,27 @@ import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
 import { Projects } from "@/components/sections/Projects";
 import { Certifications } from "@/components/sections/Certifications";
-import { Services } from "@/components/sections/Services";
-import { TechStack } from "@/components/sections/TechStack";
-import { Blog } from "@/components/sections/Blog";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
-import { SaranAI } from "@/components/SaranAI";
+import { lazy, Suspense } from "react";
+
+const SaranAI = lazy(() => import("@/components/SaranAI").then((module) => ({ default: module.SaranAI })));
 
 const Index = () => (
   <div className="min-h-dvh bg-background text-foreground">
+    <a href="#main-content" className="skip-link">Skip to content</a>
     <Nav />
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <Hero />
       <About />
-      <Experience />
-      <Skills />
       <Projects />
+      <Skills />
+      <Experience />
       <Certifications />
-      <Services />
-      <TechStack />
-      <Blog />
       <Contact />
     </main>
     <Footer />
-    <SaranAI />
+    <Suspense fallback={null}><SaranAI /></Suspense>
   </div>
 );
 

@@ -1,49 +1,101 @@
-import { portfolio } from "@/data/portfolio";
+import { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { portfolio, type Project } from "@/data/portfolio";
 import { SectionHeader } from "@/components/SectionHeader";
 import { Reveal } from "@/components/Reveal";
-import { ArrowUpRight } from "lucide-react";
+import { ProjectVisual } from "@/components/ProjectVisual";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-export const Projects = () => (
-  <section id="projects" className="relative py-24 bg-surface/40">
-    <div className="container">
-      <SectionHeader
-        eyebrow="Featured work"
-        title={<>Projects with <span className="gradient-text">measurable</span> impact.</>}
-        subtitle="A selection of platform, migration and AI-ops initiatives shipped in production."
-      />
-
-      <div className="mx-auto mt-14 grid max-w-6xl gap-6 md:grid-cols-2">
-        {portfolio.projects.map((p, i) => (
-          <Reveal key={p.title} delay={i * 80} className="group glass overflow-hidden rounded-2xl hover-lift">
-            <div className="relative aspect-[16/10] overflow-hidden">
-              <img
-                src={p.image}
-                alt={`${p.title} preview`}
-                loading="lazy"
-                width={1280}
-                height={800}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-            </div>
-            <div className="p-6">
-              <div className="flex items-start justify-between gap-4">
-                <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">{p.title}</h3>
-                <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">{p.summary}</p>
-              <div className="mt-3 font-mono text-xs text-accent">→ {p.impact}</div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {p.tags.map((t) => (
-                  <span key={t} className="rounded-md border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
+const CaseStudy = ({ project }: { project: Project }) => {
+  const sections: { title: string; body: React.ReactNode }[] = [
+    { title: "Why it exists", body: project.why ? <p>{project.why}</p> : null },
+    { title: "What I worked on", body: <p>{project.role}</p> },
+    {
+      title: "Engineering challenges",
+      body: project.challenges?.length ? <ul>{project.challenges.map((item) => <li key={item}>{item}</li>)}</ul> : null,
+    },
+    { title: "Outcomes", body: project.outcomes?.length ? <ul>{project.outcomes.map((item) => <li key={item}>{item}</li>)}</ul> : null },
+    { title: "Tools", body: project.tools.length ? <ul className="plain-list">{project.tools.map((tool) => <li key={tool}>{tool}</li>)}</ul> : null },
+  ];
+  return (
+    <DialogContent className="case-study">
+      <p className="eyebrow">{project.workType} <span aria-hidden="true">&middot;</span> {project.category}</p>
+      <DialogTitle className="case-study-title">{project.title}</DialogTitle>
+      <DialogDescription className="case-study-description">{project.what}</DialogDescription>
+      <ProjectVisual project={project} />
+      <div className="cs-sections">
+        {sections.filter((section) => section.body).map((section) => (
+          <section className="cs-section" key={section.title}><h3>{section.title}</h3><div>{section.body}</div></section>
         ))}
       </div>
-    </div>
-  </section>
+      <p className="case-study-footnote">Internal names, identifiers and financial data are left out of this overview.</p>
+    </DialogContent>
+  );
+};
+
+export const OpenCaseStudy = ({ project, children }: { project: Project; children: React.ReactNode }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {children}
+      {open && <CaseStudy project={project} />}
+    </Dialog>
+  );
+};
+
+const FeaturedProject = ({ project, index }: { project: Project; index: number }) => (
+  <Reveal className={`feature ${index === 0 ? "is-lead" : ""} ${index % 2 === 1 ? "is-flipped" : ""}`}>
+    <article id={`work-${project.id}`} className="feature-body">
+      <p className="feature-meta"><span>{String(index + 1).padStart(2, "0")}</span> {project.category}</p>
+      <h3>{project.title}</h3>
+      <p className="feature-summary">{project.summary}</p>
+      <dl className="feature-facts">
+        <div><dt>My part</dt><dd>{project.myPart}</dd></div>
+        <div><dt>Tools</dt><dd>{project.tools.slice(0, 5).join(", ")}</dd></div>
+        {project.highlight && <div><dt>Result</dt><dd>{project.highlight}</dd></div>}
+      </dl>
+      <OpenCaseStudy project={project}>
+        <DialogTrigger asChild>
+          <button className="project-open" aria-label={`View case study: ${project.title}`}>View case study <ArrowUpRight size={18} /></button>
+        </DialogTrigger>
+      </OpenCaseStudy>
+    </article>
+    <div className="feature-visual"><ProjectVisual project={project} /></div>
+  </Reveal>
 );
+
+const AdditionalProject = ({ project, index }: { project: Project; index: number }) => (
+  <Reveal className="more-item">
+    <article id={`work-${project.id}`}>
+      <p className="feature-meta"><span>{String(index + 1).padStart(2, "0")}</span> {project.workType}</p>
+      <h4>{project.title}</h4>
+      <p>{project.summary}</p>
+      <OpenCaseStudy project={project}>
+        <DialogTrigger asChild>
+          <button className="project-open" aria-label={`View case study: ${project.title}`}>View case study <ArrowUpRight size={18} /></button>
+        </DialogTrigger>
+      </OpenCaseStudy>
+    </article>
+  </Reveal>
+);
+
+export const Projects = () => {
+  const featured = portfolio.projects.filter((project) => project.tier === "featured");
+  const additional = portfolio.projects.filter((project) => project.tier === "additional");
+  return (
+    <section id="projects" className="section-space projects-section">
+      <div className="page-shell">
+        <SectionHeader eyebrow="Selected work" title={<>Work I can <em>explain end to end.</em></>} subtitle="Six projects I can walk through in detail, plus three more. Details are anonymized." />
+        <div className="feature-list">
+          {featured.map((project, index) => <FeaturedProject key={project.id} project={project} index={index} />)}
+        </div>
+        <div className="more-work">
+          <h3 className="more-heading">More engineering work</h3>
+          <div className="more-grid">
+            {additional.map((project, index) => <AdditionalProject key={project.id} project={project} index={featured.length + index} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

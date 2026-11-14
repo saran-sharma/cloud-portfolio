@@ -1,114 +1,72 @@
-import { useEffect, useState } from "react";
-import { Menu, X, Moon, Sun, Github, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "./theme-provider";
-import { portfolio } from "@/data/portfolio";
-import { cn } from "@/lib/utils";
 
 const links = [
+  { href: "#top", label: "Home" },
   { href: "#about", label: "About" },
-  { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Skills" },
   { href: "#projects", label: "Projects" },
-  { href: "#certifications", label: "Certs" },
-  { href: "#services", label: "Services" },
-  { href: "#blog", label: "Blog" },
+  { href: "#skills", label: "Skills" },
+  { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
 ];
 
 export const Nav = () => {
   const { theme, toggle } = useTheme();
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("#top");
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const sections = links.map((link) => document.querySelector(link.href)).filter((section): section is HTMLElement => section instanceof HTMLElement);
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+      }
+    }, { rootMargin: "-15% 0px -65% 0px" });
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (open) menuRef.current?.querySelector("a")?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && open) {
+        setOpen(false);
+        menuButton.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "py-2" : "py-4"
-      )}
-    >
-      <div className="container">
-        <nav
-          className={cn(
-            "flex items-center justify-between rounded-full px-4 py-2 transition-all",
-            scrolled ? "glass shadow-elegant" : "bg-transparent"
-          )}
-          aria-label="Primary"
-        >
-          <a href="#top" className="flex items-center gap-2 pl-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-primary text-primary-foreground font-bold shadow-glow">S</span>
-            <span className="font-semibold tracking-tight hidden sm:inline">Saran S</span>
-          </a>
-
-          <ul className="hidden lg:flex items-center gap-1">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" asChild aria-label="GitHub profile">
-              <a href={portfolio.profile.github} target="_blank" rel="noreferrer">
-                <Github className="h-4 w-4" />
+    <header className="site-header">
+      <nav className="site-nav page-shell" aria-label="Primary">
+        <a className="wordmark" href="#top" aria-label="Saran S. home">
+          <span className="monogram" aria-hidden="true">S<span>.</span></span>
+          <span>SARAN S<span className="text-gold">.</span></span>
+        </a>
+        <ul ref={menuRef} id="navigation-links" className={`nav-links ${open ? "is-open" : ""}`}>
+          {links.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} aria-current={active === link.href ? "location" : undefined} onClick={() => setOpen(false)}>
+                {link.label}
               </a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild aria-label="LinkedIn profile">
-              <a href={portfolio.profile.linkedin} target="_blank" rel="noreferrer">
-                <Linkedin className="h-4 w-4" />
-              </a>
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle color theme">
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-            <Button asChild size="sm" className="hidden sm:inline-flex ml-1 rounded-full bg-gradient-primary text-primary-foreground shadow-glow hover:opacity-95">
-              <a href="#contact">Hire me</a>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setOpen((o) => !o)}
-              aria-label="Toggle menu"
-              aria-expanded={open}
-            >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-        </nav>
-
-        {open && (
-          <div className="glass mt-2 rounded-2xl p-4 lg:hidden animate-fade-in">
-            <ul className="grid gap-1">
-              {links.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-2 text-sm hover:bg-secondary"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+            </li>
+          ))}
+        </ul>
+        <div className="nav-actions">
+          <button className="icon-button theme-toggle" onClick={toggle} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+          <a href="#contact" className="nav-connect">Let's connect <ArrowUpRight size={15} /></a>
+          <button ref={menuButton} className="icon-button menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="navigation-links">
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+      </nav>
     </header>
   );
 };

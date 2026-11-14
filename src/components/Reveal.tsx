@@ -15,7 +15,7 @@ export const Reveal = ({
     <div
       ref={ref}
       style={{ animationDelay: `${delay}ms` }}
-      className={cn(shown ? "animate-fade-in-up" : "opacity-0", className)}
+      className={cn("reveal", shown && "is-shown", className)}
     >
       {children}
     </div>

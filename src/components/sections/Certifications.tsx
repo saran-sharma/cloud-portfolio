@@ -1,26 +1,32 @@
+import { GraduationCap } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
-import { SectionHeader } from "@/components/SectionHeader";
 import { Reveal } from "@/components/Reveal";
-import { BadgeCheck } from "lucide-react";
 
 export const Certifications = () => (
-  <section id="certifications" className="relative py-24">
-    <div className="container">
-      <SectionHeader
-        eyebrow="Certifications"
-        title={<>Verified <span className="gradient-text">expertise</span>.</>}
-      />
-      <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {portfolio.certifications.map((c, i) => (
-          <Reveal key={c.code} delay={i * 70} className="glass group relative overflow-hidden rounded-2xl p-6 hover-lift">
-            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-primary opacity-20 blur-2xl transition-opacity group-hover:opacity-40" />
-            <BadgeCheck className="h-8 w-8 text-primary" />
-            <div className="mt-4 font-mono text-xs uppercase tracking-wider text-accent">{c.code}</div>
-            <div className="mt-1 font-semibold">{c.name}</div>
-            <div className="mt-1 text-xs text-muted-foreground">{c.issuer}</div>
-          </Reveal>
-        ))}
-      </div>
+  <section id="certifications" className="section-space page-shell credentials-section">
+    <p className="eyebrow">Credentials</p>
+    <h2>Certifications <em>and study.</em></h2>
+    <div className="credentials-grid">
+      <Reveal>
+        <h3 className="credentials-heading">Certifications</h3>
+        <ul className="cert-list">
+          {portfolio.certifications.map((cert) => (
+            <li key={cert.name}>
+              <span>{cert.name}</span>
+              <span className="cert-meta">{cert.issuer}{cert.date ? `, ${cert.date}` : ""}</span>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
+      <Reveal className="credential" delay={80}>
+        <GraduationCap size={28} strokeWidth={1.3} aria-hidden="true" />
+        <div>
+          <p className="credential-kind">Postgraduate study, 2025 - 2027</p>
+          <h3>M.Tech in Cloud Computing</h3>
+          <p>BITS Pilani WILP, in progress.</p>
+          <p className="education-foundation">{portfolio.education[1].degree}, {portfolio.education[1].school}, {portfolio.education[1].period}</p>
+        </div>
+      </Reveal>
     </div>
   </section>
 );
