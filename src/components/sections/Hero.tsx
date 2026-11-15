@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
 import { CitySkyline } from "@/city/components/CitySkyline";
+import { useSkyParallax } from "@/city/hooks/use-sky-parallax";
 import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
 
 const specialties = ["Azure", "Databricks", "Fabric", "PySpark", "DevOps", "AI"];
@@ -9,8 +10,9 @@ const specialties = ["Azure", "Databricks", "Fabric", "PySpark", "DevOps", "AI"]
 export const Hero = () => {
   const p = portfolio.profile;
   const { ref, interactive, handlers } = usePointerTilt<HTMLElement>();
+  const sky = useSkyParallax<HTMLElement>();
   return (
-    <section id="top" className="hero">
+    <section id="top" className="hero" ref={sky}>
       <div className="hero-sky" aria-hidden="true">
         <i className="sc-sun" />
         <CitySkyline />

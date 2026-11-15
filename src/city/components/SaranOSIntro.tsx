@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Compass, Download, Play, Users } from "lucide-react";
 import { Portrait } from "@/city/components/Portrait";
 import { CitySkyline } from "@/city/components/CitySkyline";
+import { useSkyParallax } from "@/city/hooks/use-sky-parallax";
 import { useReducedMotion } from "@/city/hooks/use-reduced-motion";
 import { useCity } from "@/city/state/CityProvider";
 import { portfolio } from "@/data/portfolio";
@@ -12,7 +13,9 @@ export const SaranOSIntro = () => {
   const { progress, markIntroSeen, go, setMode } = useCity();
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<"cinematic" | "menu">(() => (progress.introSeen ? "menu" : "cinematic"));
+  const [returning] = useState(progress.introSeen);
   const showMenu = phase === "menu" || reduced;
+  const sky = useSkyParallax<HTMLElement>();
 
   const finish = useCallback(() => {
     markIntroSeen();
@@ -35,7 +38,7 @@ export const SaranOSIntro = () => {
   }, [phase, reduced, finish]);
 
   return (
-    <section className={`sc-intro ${showMenu ? "is-menu" : "is-cinematic"}`} aria-labelledby="sc-title" onPointerDown={showMenu ? undefined : finish}>
+    <section ref={sky} className={`sc-intro ${showMenu ? "is-menu" : "is-cinematic"} ${returning ? "is-returning" : ""}`} aria-labelledby="sc-title" onPointerDown={showMenu ? undefined : finish}>
       <div className="sc-intro-sky" aria-hidden="true">
         <i className="sc-sun" />
         <CitySkyline />

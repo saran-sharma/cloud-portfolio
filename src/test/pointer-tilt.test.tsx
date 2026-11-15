@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Hero } from "@/components/sections/Hero";
+import { characterAlt, characterImage } from "@/city/character";
 import { createTiltEngine } from "@/hooks/use-pointer-tilt";
 
 let queue: FrameRequestCallback[] = [];
@@ -124,12 +125,12 @@ describe("tilt engine", () => {
 });
 
 describe("hero portrait", () => {
-  const portrait = () => screen.getByRole("img", { name: "Portrait of Saran S." }).closest("figure") as HTMLElement;
+  const portrait = () => screen.getByRole("img", { name: characterAlt }).closest("figure") as HTMLElement;
 
-  it("keeps the original photograph with decorative layers hidden from assistive tech", () => {
+  it("shows the character artwork with decorative layers hidden from assistive tech", () => {
     render(<Hero />);
     const figure = portrait();
-    expect(screen.getByRole("img", { name: "Portrait of Saran S." }).getAttribute("src")).toContain("profilepic");
+    expect(screen.getByRole("img", { name: characterAlt }).getAttribute("src")).toBe(characterImage);
     ["photo-ambient", "photo-light", "photo-ruler"].forEach((name) => {
       expect(figure.querySelector(`.${name}`)).toHaveAttribute("aria-hidden", "true");
     });

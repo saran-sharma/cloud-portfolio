@@ -2,6 +2,7 @@ import { act, cleanup, configure, fireEvent, render, screen, waitFor, within } f
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "@/App";
 import { DISTRICTS } from "@/city/data/districts";
+import { characterAlt, characterImage } from "@/city/character";
 import { STORAGE_ACCOUNTS, expectedAction, recommendTier, COST_RESOURCES } from "@/city/missions/logic";
 import { STORAGE_KEY } from "@/city/state/game-state";
 
@@ -68,7 +69,7 @@ describe("start screen", () => {
     expect(screen.getByText("SARAN.OS PRESENTS")).toBeInTheDocument();
     expect(screen.getByText("THE ENGINEERING CHRONICLES")).toBeInTheDocument();
     expect(screen.getByText(/Every system has a story. Explore mine./)).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Portrait of Saran S." }).getAttribute("src")).toContain("profilepic");
+    expect(screen.getByRole("img", { name: characterAlt }).getAttribute("src")).toBe(characterImage);
     expect(screen.getByRole("button", { name: /Skip intro/ })).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /Recruiter Mode/ }).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: /Skip intro/ }));

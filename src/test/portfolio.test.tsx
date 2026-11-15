@@ -6,6 +6,7 @@ import { Contact } from "@/components/sections/Contact";
 import { Projects } from "@/components/sections/Projects";
 import { SaranAI } from "@/components/SaranAI";
 import { portfolio } from "@/data/portfolio";
+import { characterAlt, characterImage } from "@/city/character";
 import { getPortfolioResponse } from "@/lib/portfolio-assistant";
 
 vi.mock("@emailjs/browser", () => ({ default: { send: vi.fn() } }));
@@ -42,8 +43,8 @@ describe("Portfolio identity and navigation", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("I build data platforms. I automate what slows them down.");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Saran S., Data Platform Engineer.");
     expect(screen.getByRole("link", { name: "Explore My Work" })).toHaveAttribute("href", "#projects");
-    const portrait = screen.getByRole("img", { name: "Portrait of Saran S." });
-    expect(portrait.getAttribute("src")).toContain("profilepic");
+    const portrait = screen.getByRole("img", { name: characterAlt });
+    expect(portrait.getAttribute("src")).toBe(characterImage);
     expect(portrait).toHaveAttribute("loading", "eager");
     expect(screen.queryByText(/Senior Cloud|petabyte|under 30 minutes|40%|unverified|Platform Atlas|Powering/i)).not.toBeInTheDocument();
     expect(portfolio.certifications).toHaveLength(5);

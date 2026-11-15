@@ -97,22 +97,36 @@ button) and `/?mode=recruiter` opens it directly.
 
 ### Character artwork status
 
-- **The illustrated 3D character has NOT been generated.** No image-generation
-  capability is available in the coding environment, and the artwork must not be faked
-  with CSS or SVG. `src/assets/saran-character.png` does not exist.
-- The site currently shows the real photograph everywhere, through
-  [character.ts](src/city/character.ts). The photo `src/assets/profilepic.jpeg` is
-  unchanged.
-- To supply it: generate the image with the prompt in
-  [docs/saran-character-prompt.md](docs/saran-character-prompt.md), check it against
-  the acceptance list there, and save it as `src/assets/saran-character.png`. The
-  intro, player profile, map marker, district dossier and Recruiter Mode hero then use
-  it automatically. Re-check the face crops afterwards (`.is-art` rules in
-  [city.css](src/city/city.css) and [recruiter.css](src/city/recruiter.css)).
+- **Supplied and integrated.** The owner-supplied stylized character
+  `src/assets/saran-character.png` (768x768) is used through
+  [character.ts](src/city/character.ts) on the opening screen, player profile, world-map
+  marker, district dossier and the Recruiter Mode hero. It was supplied externally, not
+  generated in this repository, and is used unmodified.
+- The original photograph `src/assets/profilepic.jpeg` is unchanged and stays the
+  fallback: if the character file is removed, every screen falls back to the photo.
+- Crops are tuned separately for the large portraits (`object-position`) and the small
+  circular avatars (`background-size` and `background-position`) under the `.is-art`
+  rules in [city.css](src/city/city.css) and [recruiter.css](src/city/recruiter.css).
+- The source file is 768px square, so it is upscaled in the large hero portraits. A
+  higher-resolution export (about 1600px) would look sharper.
+
+### Motion
+
+All motion is code-based (CSS and a small requestAnimationFrame hook); there is no video
+and no filter trick.
+
+- Character entrance, then a slow idle float and faint breathing scale.
+- Sun and skyline drift against the pointer, driven by
+  [use-sky-parallax.ts](src/city/hooks/use-sky-parallax.ts) from local pointer events only.
+- Skyline windows twinkle ([CitySkyline.tsx](src/city/components/CitySkyline.tsx)).
+- Screen and district transitions, plus hover states on cards, chips and tiles.
+- `prefers-reduced-motion` turns the idle, twinkle and parallax motion off. Parallax also
+  stays off for touch devices and screens under 768px.
 
 Known limitations: there is no sound; the player is a portrait, not a full-body
 avatar; the missions are simulations of the kind of work done, not real client
-systems; the mini-map is shown on screens 1600px or wider. The job title on the resume
+systems; the mini-map is shown on screens 1600px or wider. On phones the opening screen
+shows the menu first and the character below it. The job title on the resume
 ("Senior Cloud & DevOps Engineer") still differs from the site ("Data Platform
 Engineer | AI & Cloud"), and `public/resume.pdf` is the older resume. Both are
 decisions for the owner and are listed in [docs/content-todo.md](docs/content-todo.md).
@@ -136,7 +150,7 @@ npm run build
 Tests cover the hero identity, anchors, the menu, the single dark theme, the 404 page,
 all eight case studies, contact delivery (EmailJS is mocked), the local guide, the
 Saran City game logic (XP, badges, persistence, synthetic data) and its end-to-end
-flow. Latest run: TypeScript clean, 58 of 58 tests pass, production build passes.
+flow. Latest run: TypeScript clean, 63 of 63 tests pass, production build passes.
 
 `npm run lint` still reports two errors in unused shadcn files
 ([command.tsx](src/components/ui/command.tsx) and

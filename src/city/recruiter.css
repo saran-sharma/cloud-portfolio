@@ -60,11 +60,13 @@
 .recruiter-city .hero-socials a:hover { color: var(--sc-cyan); }
 .recruiter-city .hero-photo { top: 56px; bottom: 96px; right: max(48px, calc((100% - 1240px) / 2)); width: min(42%, 540px); border-radius: 6px; background: #0b0720; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 30px 120px rgba(255, 46, 147, .38), 0 0 80px rgba(34, 230, 255, .18); }
 .recruiter-city .hero-photo img { object-position: 45% 10%; filter: none; }
-.recruiter-city .hero-photo.is-art img { object-position: 50% 12%; }
+.recruiter-city .hero-photo.is-art img { object-position: 60% 0%; }
 .recruiter-city .hero-photo::before { background: linear-gradient(205deg, rgba(34, 230, 255, .14), transparent 46%), linear-gradient(25deg, rgba(255, 46, 147, .2), transparent 56%), linear-gradient(0deg, rgba(7, 6, 20, .85), transparent 34%), radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(7, 6, 20, .5) 100%); }
 .recruiter-city .hero-photo.is-art::before { opacity: .55; }
 .recruiter-city .photo-ambient { opacity: .35; background: radial-gradient(ellipse 48% 38% at 78% 16%, rgba(255, 154, 60, .8), transparent 72%); }
 .recruiter-city .photo-light { background: radial-gradient(ellipse 60% 50% at var(--lx) var(--ly), #ffe2ad 0%, rgba(255, 150, 190, .6) 36%, transparent 78%); }
+.recruiter-city .hero-photo { animation: sc-portrait-in 1s cubic-bezier(.2, .7, .2, 1) .15s backwards, sc-float 8s ease-in-out 1.4s infinite; }
+.recruiter-city .hero-photo img { animation: sc-breathe 9s ease-in-out 1.6s infinite; }
 .recruiter-city .photo-ruler { display: none; }
 .recruiter-city .hero-photo figcaption { left: 20px; bottom: 18px; padding: 0; background: none; border: 0; backdrop-filter: none; text-shadow: 0 2px 12px #000; }
 .recruiter-city .hero-photo figcaption strong { font-size: 1.5rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
@@ -88,6 +90,12 @@
 .recruiter-city .more-work { border-top-color: var(--sc-line); }
 .recruiter-city .more-item > article { padding: 28px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
 .recruiter-city .more-grid { gap: 24px; }
+
+@media (hover: hover) {
+  .recruiter-city .feature, .recruiter-city .more-item > article, .recruiter-city .skill-row, .recruiter-city .experience-role, .recruiter-city .credential { transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .recruiter-city .feature:hover, .recruiter-city .more-item > article:hover, .recruiter-city .skill-row:hover { border-color: rgba(34, 230, 255, .45); box-shadow: 0 16px 44px rgba(0, 0, 0, .35); }
+  .recruiter-city .more-item > article:hover, .recruiter-city .skill-row:hover { transform: translateY(-2px); }
+}
 
 .recruiter-city .journey { padding-inline: 24px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
 .recruiter-city .journey li { border-bottom-color: var(--sc-line); }
@@ -142,7 +150,7 @@
 }
 @media (max-width: 640px) {
   .recruiter-city .wordmark { font-size: 1.0625rem; }
-  .recruiter-city .hero-photo.is-art img { object-position: 50% 14%; }
+  .recruiter-city .hero-photo.is-art img { object-position: 65% 0%; }
   .recruiter-city .feature, .recruiter-city .feature.is-lead { padding: 24px 20px; }
   .recruiter-city .more-item > article { padding: 22px 20px; }
   .recruiter-city .experience-role { padding: 24px 20px; }
@@ -152,4 +160,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .recruiter-city { animation: none; }
+  .recruiter-city .hero-photo, .recruiter-city .hero-photo img, .recruiter-city .sc-window { animation: none !important; }
+  .recruiter-city *, .recruiter-city *::before, .recruiter-city *::after { transition-duration: .01ms !important; }
 }
