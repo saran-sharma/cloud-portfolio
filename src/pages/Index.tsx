@@ -11,10 +11,10 @@ import { lazy, Suspense } from "react";
 
 const SaranAI = lazy(() => import("@/components/SaranAI").then((module) => ({ default: module.SaranAI })));
 
-const Index = () => (
+const Index = ({ onExploreCity }: { onExploreCity?: () => void }) => (
   <div className="min-h-dvh bg-background text-foreground">
     <a href="#main-content" className="skip-link">Skip to content</a>
-    <Nav />
+    <Nav onExploreCity={onExploreCity} />
     <main id="main-content" tabIndex={-1}>
       <Hero />
       <About />

@@ -1,10 +1,17 @@
 /* SARAN CITY: original neon-sunset visual language. Scoped to .saran-city and a few portaled dialogs. */
 
 .saran-city,
+.recruiter-city,
 .sc-active .case-study,
 .sc-active .assistant-dialog,
 .sc-progress-dialog {
   color-scheme: dark;
+  --gold: #22e6ff;
+  --bronze: rgba(168, 156, 255, 0.38);
+  --surface: 246 45% 8%;
+  --surface-elevated: 246 45% 11%;
+  --destructive: 0 84% 70%;
+  --destructive-foreground: 0 0% 100%;
   --sc-bg: #070614;
   --sc-navy: #0b1030;
   --sc-panel: rgba(14, 12, 42, 0.82);
@@ -179,6 +186,9 @@
 .sc-player-tag { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); padding: 1px 8px; font-family: 'IBM Plex Mono', monospace; font-size: .8125rem; letter-spacing: .1em; color: #fff; background: var(--sc-magenta); border-radius: 3px; }
 .sc-face { display: inline-block; width: 46px; height: 46px; border-radius: 50%; background-color: #1b1240; background-size: 260%; background-position: 45% 27%; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--sc-magenta), 0 0 22px rgba(255, 46, 147, .75); flex: none; }
 .sc-face.is-large { width: 124px; height: 124px; }
+.sc-face.is-art { background-position: 50% 22%; }
+.sc-portrait.is-art img { object-position: 50% 12%; }
+.sc-portrait.is-art .sc-portrait-grade { opacity: .55; }
 .sc-tooltip { position: absolute; z-index: 6; width: 250px; padding: 12px 14px; display: grid; gap: 3px; transform: translate(-50%, calc(-100% - 40px)); pointer-events: none; background: var(--sc-panel-solid); border: 1px solid var(--accent); border-radius: 6px; box-shadow: 0 0 30px rgba(0, 0, 0, .6); animation: sc-fade .18s both; }
 .sc-tooltip.is-below { transform: translate(-50%, 44px); }
 .sc-tooltip.is-left { transform: translate(calc(-100% - 36px), -50%); }

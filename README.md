@@ -21,7 +21,7 @@ are in [ProjectVisual.tsx](src/components/ProjectVisual.tsx): a medallion pipeli
 an onboarding and promotion flow, a reporting architecture, a vertical
 investigation flow, a storage decision tree, a PIM swimlane, a layered data
 platform and an MCP sequence diagram. They are native
-HTML and CSS, so they stay readable on small screens and in both themes.
+HTML and CSS, so they stay readable on small screens.
 GymFlow AI has no diagram because there is nothing to show beyond its stack.
 
 ## Authenticity rules
@@ -35,9 +35,10 @@ GymFlow AI has no diagram because there is nothing to show beyond its stack.
 
 ## Design
 
-Near-black, ivory and bronze palette with a light theme. Oswald for headlines, DM
-Sans for body text and IBM Plex Mono for small technical labels. Body text is
-17px, nothing renders below 13px, and the type scale is defined in
+Saran City palette: deep navy, sunset magenta and orange, electric cyan accents. It
+is shared by the game and Recruiter Mode, with a single dark theme. Oswald for
+headlines, DM Sans for body text and IBM Plex Mono for small technical labels. Body
+text is 17px, nothing renders below 13px, and the type scale is defined in
 [src/index.css](src/index.css). Animation is limited to a small reveal and respects
 `prefers-reduced-motion`.
 
@@ -81,15 +82,40 @@ button) and `/?mode=recruiter` opens it directly.
 - **Accessibility:** keyboard operable, Escape goes back, `prefers-reduced-motion`
   disables the cinematic and map zoom, a list of districts replaces the map
   on narrow screens, and tap targets are at least 44px.
+- **Recruiter Mode look:** the portfolio now uses the Saran City identity: the same
+  navy and sunset palette, Oswald display type, button shapes, skyline, and the same
+  character module. Colour tokens come from [city.css](src/city/city.css) and the
+  structural restyle is in [recruiter.css](src/city/recruiter.css), so the content
+  components are unchanged. The light theme and its toggle were removed so there is
+  one visual identity. The switch back to the game is in the header on tablet and
+  desktop and a floating button on phones.
 - **Code:** everything lives in [src/city](src/city). No new dependencies.
   [CityApp.tsx](src/city/components/CityApp.tsx) switches between the game and the
-  unchanged [Index.tsx](src/pages/Index.tsx).
-- **Screenshots:** [docs/screenshots](docs/screenshots) (desktop 1440x900, tablet
-  820x1180, mobile 390x844).
+  portfolio ([Index.tsx](src/pages/Index.tsx)).
+- **Screenshots:** [docs/screenshots](docs/screenshots). `before/` and `after/` show
+  the Recruiter Mode change.
 
-Known limitations: there is no sound; the player is the supplied portrait, not a
-full-body avatar; the missions are simulations of the kind of work done, not real
-client systems; the mini-map is shown on screens 1600px or wider.
+### Character artwork status
+
+- **The illustrated 3D character has NOT been generated.** No image-generation
+  capability is available in the coding environment, and the artwork must not be faked
+  with CSS or SVG. `src/assets/saran-character.png` does not exist.
+- The site currently shows the real photograph everywhere, through
+  [character.ts](src/city/character.ts). The photo `src/assets/profilepic.jpeg` is
+  unchanged.
+- To supply it: generate the image with the prompt in
+  [docs/saran-character-prompt.md](docs/saran-character-prompt.md), check it against
+  the acceptance list there, and save it as `src/assets/saran-character.png`. The
+  intro, player profile, map marker, district dossier and Recruiter Mode hero then use
+  it automatically. Re-check the face crops afterwards (`.is-art` rules in
+  [city.css](src/city/city.css) and [recruiter.css](src/city/recruiter.css)).
+
+Known limitations: there is no sound; the player is a portrait, not a full-body
+avatar; the missions are simulations of the kind of work done, not real client
+systems; the mini-map is shown on screens 1600px or wider. The job title on the resume
+("Senior Cloud & DevOps Engineer") still differs from the site ("Data Platform
+Engineer | AI & Cloud"), and `public/resume.pdf` is the older resume. Both are
+decisions for the owner and are listed in [docs/content-todo.md](docs/content-todo.md).
 
 ## Portfolio guide
 
@@ -107,9 +133,10 @@ npm run lint
 npm run build
 ```
 
-Tests cover the hero identity, anchors, themes and menu, the 404 page, all eight
-case studies, contact delivery (EmailJS is mocked), the local guide, the Saran City
-game logic (XP, badges, persistence, synthetic data) and its end-to-end flow.
+Tests cover the hero identity, anchors, the menu, the single dark theme, the 404 page,
+all eight case studies, contact delivery (EmailJS is mocked), the local guide, the
+Saran City game logic (XP, badges, persistence, synthetic data) and its end-to-end
+flow. Latest run: TypeScript clean, 58 of 58 tests pass, production build passes.
 
 `npm run lint` still reports two errors in unused shadcn files
 ([command.tsx](src/components/ui/command.tsx) and

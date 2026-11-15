@@ -70,7 +70,7 @@
   a, button { touch-action: manipulation; }
   button:disabled { cursor: wait; opacity: .6; }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
-  section[id], article[id] { scroll-margin-top: 105px; }
+  section[id], article[id] { scroll-margin-top: 0; }
   h2 { font-size: clamp(2rem, 3.6vw, 3.1rem); line-height: 1.12; font-weight: 500; letter-spacing: -.035em; }
   h2 em { font-family: Georgia, 'Times New Roman', serif; color: var(--gold); font-weight: 400; letter-spacing: -.03em; }
   ::selection { background: hsl(var(--primary) / .3); }

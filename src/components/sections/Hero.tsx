@@ -1,7 +1,8 @@
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
-import profileImage from "@/assets/profilepic.jpeg";
+import { CitySkyline } from "@/city/components/CitySkyline";
+import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
 
 const specialties = ["Azure", "Databricks", "Fabric", "PySpark", "DevOps", "AI"];
 
@@ -10,6 +11,10 @@ export const Hero = () => {
   const { ref, interactive, handlers } = usePointerTilt<HTMLElement>();
   return (
     <section id="top" className="hero">
+      <div className="hero-sky" aria-hidden="true">
+        <i className="sc-sun" />
+        <CitySkyline />
+      </div>
       <div className="hero-inner page-shell">
         <div className="hero-head">
           <p className="hero-eyebrow">Hello, I'm Saran <span aria-hidden="true">&middot;</span> {p.location}</p>
@@ -22,9 +27,9 @@ export const Hero = () => {
           </h1>
         </div>
 
-        <figure ref={ref} className={`hero-photo ${interactive ? "is-interactive" : ""}`} {...handlers}>
+        <figure ref={ref} className={`hero-photo ${interactive ? "is-interactive" : ""} ${hasCharacterArt ? "is-art" : ""}`} {...handlers}>
           <div className="photo-stage">
-            <img src={profileImage} alt={`Portrait of ${p.name}`} width={1254} height={1254} loading="eager" decoding="async" draggable={false} />
+            <img src={characterImage} alt={hasCharacterArt ? characterAlt : `Portrait of ${p.name}`} width={1254} height={1254} loading="eager" decoding="async" draggable={false} />
           </div>
           <div className="photo-ambient" aria-hidden="true" />
           <div className="photo-light" aria-hidden="true" />
@@ -32,6 +37,7 @@ export const Hero = () => {
           <figcaption>
             <strong>{p.name}</strong>
             <span>{p.title}</span>
+            <span>{p.location}</span>
           </figcaption>
         </figure>
 

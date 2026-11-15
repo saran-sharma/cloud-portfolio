@@ -1,16 +1,16 @@
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
-import profileImage from "@/assets/profilepic.jpeg";
+import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
 
 /**
- * The real portrait with a cinematic grade built from CSS layers only.
- * The photograph is never altered: grading sits on top and the face stays natural.
+ * The player artwork: the illustrated character when src/assets/saran-character.* exists,
+ * otherwise the real photograph. Grading sits on top as CSS layers and never alters the file.
  */
 export const Portrait = ({ caption, className = "" }: { caption?: string; className?: string }) => {
   const { ref, interactive, handlers } = usePointerTilt<HTMLElement>();
   return (
-    <figure ref={ref} className={`sc-portrait ${interactive ? "is-interactive" : ""} ${className}`} {...handlers}>
+    <figure ref={ref} className={`sc-portrait     ${interactive ? "is-interactive" : ""} ${hasCharacterArt ? "is-art" : ""} ${className}`} {...handlers}>
       <div className="sc-portrait-stage">
-        <img src={profileImage} alt="Portrait of Saran S." width={1254} height={1254} loading="eager" decoding="async" draggable={false} />
+            <img src={characterImage} alt={characterAlt} width={1254} height={1254} loading="eager" decoding="async" draggable={false} />
       </div>
       <div className="sc-portrait-grade" aria-hidden="true" />
       <div className="sc-portrait-light" aria-hidden="true" />
