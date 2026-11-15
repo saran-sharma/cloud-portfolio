@@ -77,7 +77,7 @@ export function CityProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const original = document.title;
-    document.body.classList.toggle("sc-active", mode === "game");
+    document.body.classList.add("sc-active");
     if (mode === "game") document.title = "SARAN CITY | Saran S., Data Platform Engineer";
     return () => {
       document.title = original;

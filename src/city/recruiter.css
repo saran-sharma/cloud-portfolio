@@ -1,0 +1,155 @@
+/* RECRUITER MODE: the conventional portfolio presented inside the Saran City visual identity.
+   Colour tokens, fonts and the skyline come from city.css and CitySkyline. This file only
+   restyles structure: header, hero, dossier panels, buttons and forms. */
+
+.recruiter-city {
+  position: relative;
+  background:
+    radial-gradient(900px 520px at 88% 6%, rgba(255, 46, 147, .08), transparent 70%),
+    radial-gradient(800px 520px at 6% 40%, rgba(34, 230, 255, .05), transparent 70%),
+    var(--sc-bg);
+  color: var(--sc-text);
+  /* Opacity only: a transform animation here would become the containing block for the fixed switch and launcher. */
+  animation: sc-fade .45s ease both;
+}
+.recruiter-city :focus-visible { outline: 2px solid var(--sc-cyan); outline-offset: 3px; }
+.recruiter-city ::selection { background: rgba(255, 46, 147, .4); }
+.recruiter-city .skip-link { background: var(--sc-cyan); color: #06121a; font-weight: 700; }
+
+/* Type: display in Oswald, reading in DM Sans, mono only for small labels (as in the game). */
+.recruiter-city h2 { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; line-height: 1.12; }
+.recruiter-city h2 em { font-family: inherit; font-style: normal; font-weight: inherit; letter-spacing: inherit; background: linear-gradient(100deg, var(--sc-orange), var(--sc-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.recruiter-city .eyebrow, .recruiter-city .hero-eyebrow { font-family: 'IBM Plex Mono', monospace; letter-spacing: .18em; color: var(--sc-magenta); }
+.recruiter-city .feature h3, .recruiter-city .experience-role h3, .recruiter-city .more-heading, .recruiter-city .more-item h4, .recruiter-city .credential h3, .recruiter-city .skill-label h3 { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.recruiter-city .about-subhead, .recruiter-city .credentials-heading { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--sc-cyan); font-size: 1.0625rem; }
+
+/* Header: the same bar language as the game HUD. */
+.recruiter-city .site-header { background: rgba(7, 6, 20, .88); border-bottom: 1px solid var(--sc-line); }
+.recruiter-city .wordmark { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 1.25rem; letter-spacing: .14em; }
+.recruiter-city .wordmark .text-gold { color: var(--sc-magenta); }
+.recruiter-city .monogram { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0; border: 1px solid var(--sc-magenta); border-radius: 4px; color: #fff; box-shadow: 0 0 18px rgba(255, 46, 147, .35); }
+.recruiter-city .monogram span { color: var(--sc-magenta); right: 4px; bottom: 0; }
+.recruiter-city .nav-links a[aria-current]::after { background: var(--sc-cyan); }
+.recruiter-city .nav-connect { gap: 9px; font-weight: 700; font-size: .9375rem; letter-spacing: .04em; text-transform: uppercase; color: #06121a; background: var(--sc-cyan); border: 0; border-radius: 4px; box-shadow: 0 0 24px rgba(34, 230, 255, .35); }
+.recruiter-city .nav-connect:hover { background: #6af0ff; }
+.recruiter-city .nav-city { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 16px; font-weight: 700; font-size: .9375rem; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: linear-gradient(110deg, var(--sc-magenta), var(--sc-orange)); border-radius: 4px; box-shadow: 0 8px 28px rgba(255, 46, 147, .28); transition: transform .2s, box-shadow .2s; white-space: nowrap; }
+.recruiter-city .nav-city:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(255, 46, 147, .4); }
+/* The header carries the switch from tablet up; the floating pill is for phones only. */
+@media (min-width: 641px) { .recruiter-city .sc-switch { display: none; } }
+@media (max-width: 640px) { .recruiter-city .nav-city { display: none; } }
+.recruiter-city .icon-button:hover { color: var(--sc-cyan); }
+
+/* Buttons: same shapes and hover feedback as .sc-btn. */
+.recruiter-city .action-button { border-radius: 4px; font-weight: 600; border: 1px solid var(--sc-line); }
+.recruiter-city .action-primary { color: #fff; background: linear-gradient(110deg, var(--sc-magenta), var(--sc-orange)); border-color: transparent; box-shadow: 0 8px 28px rgba(255, 46, 147, .28); }
+.recruiter-city .action-primary:hover { background: linear-gradient(110deg, var(--sc-magenta), var(--sc-orange)); box-shadow: 0 12px 34px rgba(255, 46, 147, .4); }
+.recruiter-city .action-secondary:hover { background: transparent; border-color: var(--sc-cyan); color: var(--sc-cyan); }
+.recruiter-city .project-open { color: var(--sc-cyan); border-bottom-color: rgba(34, 230, 255, .45); }
+.recruiter-city .project-open:hover { border-bottom-color: var(--sc-cyan); }
+
+/* Hero: the intro screen composition (sunset sky, skyline, framed portrait). */
+.recruiter-city .hero { background: linear-gradient(180deg, #080520 0%, #1d0c40 52%, #4a1260 80%, #7a1f6a 100%); border-bottom: 1px solid var(--sc-line); }
+.hero-sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.hero-sky svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 30%; }
+.hero-sky .sc-sun { left: 50%; bottom: 12%; width: min(34vw, 420px); opacity: .9; }
+.recruiter-city .hero-title .is-accent { background: linear-gradient(100deg, var(--sc-orange), var(--sc-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.recruiter-city .hero-title .is-sub { color: #fff4f9; }
+.recruiter-city .hero-lead { color: #fff; }
+.recruiter-city .hero-body > p + p { color: #e3dcf3; }
+.recruiter-city .hero-tech li:not(:last-child)::after { color: var(--sc-magenta); }
+.recruiter-city .hero-socials a:hover { color: var(--sc-cyan); }
+.recruiter-city .hero-photo { top: 56px; bottom: 96px; right: max(48px, calc((100% - 1240px) / 2)); width: min(42%, 540px); border-radius: 6px; background: #0b0720; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 30px 120px rgba(255, 46, 147, .38), 0 0 80px rgba(34, 230, 255, .18); }
+.recruiter-city .hero-photo img { object-position: 45% 10%; filter: none; }
+.recruiter-city .hero-photo.is-art img { object-position: 50% 12%; }
+.recruiter-city .hero-photo::before { background: linear-gradient(205deg, rgba(34, 230, 255, .14), transparent 46%), linear-gradient(25deg, rgba(255, 46, 147, .2), transparent 56%), linear-gradient(0deg, rgba(7, 6, 20, .85), transparent 34%), radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(7, 6, 20, .5) 100%); }
+.recruiter-city .hero-photo.is-art::before { opacity: .55; }
+.recruiter-city .photo-ambient { opacity: .35; background: radial-gradient(ellipse 48% 38% at 78% 16%, rgba(255, 154, 60, .8), transparent 72%); }
+.recruiter-city .photo-light { background: radial-gradient(ellipse 60% 50% at var(--lx) var(--ly), #ffe2ad 0%, rgba(255, 150, 190, .6) 36%, transparent 78%); }
+.recruiter-city .photo-ruler { display: none; }
+.recruiter-city .hero-photo figcaption { left: 20px; bottom: 18px; padding: 0; background: none; border: 0; backdrop-filter: none; text-shadow: 0 2px 12px #000; }
+.recruiter-city .hero-photo figcaption strong { font-size: 1.5rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.recruiter-city .hero-photo figcaption span { font-family: 'IBM Plex Mono', monospace; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: #fff; }
+.recruiter-city .hero-photo figcaption span:last-child { color: var(--sc-cyan); }
+
+/* Dossier panels: project briefings, skills, credentials, career. */
+.recruiter-city .projects-section, .recruiter-city .experience-section, .recruiter-city .contact-section { background: hsl(var(--surface)); border-color: var(--sc-line); }
+.recruiter-city .feature-list { margin-top: 44px; display: grid; gap: 28px; }
+.recruiter-city .feature { padding: 44px; border: 1px solid var(--sc-line); border-left: 4px solid var(--sc-cyan); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .feature:nth-child(even) { border-left-color: var(--sc-magenta); }
+.recruiter-city .feature-meta span { color: var(--sc-magenta); }
+.recruiter-city .feature-facts, .recruiter-city .about-subhead, .recruiter-city .experience-intro, .recruiter-city .education-foundation { border-top-color: var(--sc-line); }
+.recruiter-city .feature-facts dt, .recruiter-city .journey-when, .recruiter-city .cs-section h3 { color: var(--sc-cyan); }
+.recruiter-city .viz { border-radius: 6px; border-color: var(--sc-line); background: rgba(7, 6, 20, .72); }
+.recruiter-city .viz-node, .recruiter-city .viz-layers li, .recruiter-city .seq-actor { border-radius: 4px; border-color: var(--sc-line); background: rgba(14, 12, 42, .9); }
+.recruiter-city .viz-node.is-key { border-color: var(--sc-magenta); background: rgba(255, 46, 147, .1); }
+.recruiter-city .viz-step-no { border-color: var(--sc-magenta); }
+.recruiter-city .viz-incident li:last-child .viz-step-no { background: var(--sc-magenta); border-color: var(--sc-magenta); color: #fff; }
+.recruiter-city .viz-incident li:not(:last-child)::before { background: var(--sc-line); }
+.recruiter-city .more-work { border-top-color: var(--sc-line); }
+.recruiter-city .more-item > article { padding: 28px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .more-grid { gap: 24px; }
+
+.recruiter-city .journey { padding-inline: 24px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .journey li { border-bottom-color: var(--sc-line); }
+.recruiter-city .journey li:last-child { border-bottom: 0; }
+.recruiter-city .about-copy > p:first-child { color: #fff; }
+
+.recruiter-city .skills-index { display: grid; gap: 14px; border: 0; }
+.recruiter-city .skill-row { padding: 28px 32px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .skill-label { color: var(--sc-cyan); }
+.recruiter-city .skill-row li:not(:last-child)::after, .recruiter-city .plain-list li:not(:last-child)::after { color: var(--sc-magenta); }
+
+.recruiter-city .experience-role { padding: 32px; border: 1px solid var(--sc-line); border-left: 4px solid var(--sc-magenta); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .status-dot { background: var(--sc-turq); box-shadow: 0 0 10px var(--sc-turq); }
+.recruiter-city .experience-current { color: var(--sc-turq); }
+.recruiter-city .experience-since { color: var(--sc-cyan); }
+.recruiter-city .experience-themes { border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); padding-inline: 28px; }
+.recruiter-city .experience-themes li { border-top-color: var(--sc-line); }
+.recruiter-city .experience-themes li:first-child { border-top: 0; }
+
+.recruiter-city .credential, .recruiter-city .cert-list { padding-inline: 28px; border: 1px solid var(--sc-line); border-radius: 8px; background: var(--sc-panel); }
+.recruiter-city .credential { padding-block: 30px; }
+.recruiter-city .cert-list li { border-top-color: var(--sc-line); }
+.recruiter-city .cert-list li:first-child { border-top: 0; }
+.recruiter-city .credential-kind { color: var(--sc-magenta); }
+
+/* Contact. */
+.recruiter-city .contact-email { color: var(--sc-cyan); border-block-color: var(--sc-line); }
+.recruiter-city .contact-links a:hover { color: var(--sc-cyan); }
+.recruiter-city .contact-form input, .recruiter-city .contact-form textarea { border-radius: 4px; border-color: var(--sc-line); background: rgba(7, 6, 20, .75); }
+.recruiter-city .contact-form input:focus, .recruiter-city .contact-form textarea:focus { outline: none; border-color: var(--sc-cyan); box-shadow: 0 0 0 3px rgba(34, 230, 255, .2); }
+.recruiter-city .form-status { border-radius: 4px; border-color: var(--sc-line); }
+.recruiter-city .form-status.is-success { color: var(--sc-turq); }
+.recruiter-city .form-note a { color: var(--sc-cyan); }
+.recruiter-city .site-footer { border-top: 1px solid var(--sc-line); }
+
+/* Portaled and floating UI that renders with the Recruiter Mode tokens. */
+.recruiter-city .assistant-launcher { background: #0b0925; color: var(--sc-cyan); border-color: rgba(34, 230, 255, .6); border-radius: 4px; }
+.recruiter-city .assistant-form button, .sc-active .assistant-form button { color: #06121a; }
+
+@media (max-width: 1100px) {
+  .recruiter-city .hero-photo { width: min(44%, 540px); }
+}
+@media (max-width: 900px) {
+  .recruiter-city .nav-links { background: rgba(7, 6, 20, .97); border-bottom-color: var(--sc-line); }
+  .recruiter-city .nav-links a { border-bottom-color: var(--sc-line); }
+  .hero-sky svg { height: 14%; }
+  .hero-sky .sc-sun { display: none; }
+  .recruiter-city .hero-photo { position: relative; top: auto; bottom: auto; right: auto; width: 100%; }
+  .recruiter-city .feature, .recruiter-city .feature.is-lead { padding: 32px; }
+  .recruiter-city .more-item { padding-block: 0; border-top: 0; }
+  .recruiter-city .skill-row { padding: 24px; }
+}
+@media (max-width: 640px) {
+  .recruiter-city .wordmark { font-size: 1.0625rem; }
+  .recruiter-city .hero-photo.is-art img { object-position: 50% 14%; }
+  .recruiter-city .feature, .recruiter-city .feature.is-lead { padding: 24px 20px; }
+  .recruiter-city .more-item > article { padding: 22px 20px; }
+  .recruiter-city .experience-role { padding: 24px 20px; }
+  .recruiter-city .experience-themes, .recruiter-city .credential, .recruiter-city .cert-list { padding-inline: 20px; }
+  .recruiter-city .journey { padding-inline: 18px; }
+  .recruiter-city .skill-row { padding: 22px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recruiter-city { animation: none; }
+}

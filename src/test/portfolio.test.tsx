@@ -60,7 +60,8 @@ describe("Portfolio identity and navigation", () => {
     expect(download).toHaveAttribute("download");
   }, 20000);
 
-  it("supports menu dismissal and persistent light/dark themes", async () => {
+  it("supports menu dismissal and always uses the single dark Saran City theme", async () => {
+    window.localStorage.setItem("theme", "light");
     render(<App />);
     await screen.findByRole("button", { name: "SaranAI" }, { timeout: 10000 });
     const menu = screen.getByRole("button", { name: "Open navigation" });
@@ -69,11 +70,9 @@ describe("Portfolio identity and navigation", () => {
     fireEvent.keyDown(window, { key: "Escape" });
     expect(menu).toHaveAttribute("aria-expanded", "false");
     expect(menu).toHaveFocus();
-    fireEvent.click(screen.getByRole("button", { name: "Switch to light theme" }));
-    expect(document.documentElement).toHaveClass("light");
-    expect(window.localStorage.getItem("theme")).toBe("light");
-    fireEvent.click(screen.getByRole("button", { name: "Switch to dark theme" }));
+    expect(screen.queryByRole("button", { name: /theme/i })).toBeNull();
     expect(document.documentElement).toHaveClass("dark");
+    expect(document.documentElement).not.toHaveClass("light");
   }, 20000);
 
   it("preserves the unknown-route recovery page", () => {

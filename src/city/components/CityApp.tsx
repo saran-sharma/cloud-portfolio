@@ -9,6 +9,7 @@ import { ToastStack } from "@/city/components/AchievementSystem";
 import { RecruiterMode } from "@/city/components/RecruiterMode";
 import { CityProvider, useCity } from "@/city/state/CityProvider";
 import "@/city/city.css";
+import "@/city/recruiter.css";
 
 const SaranAI = lazy(() => import("@/components/SaranAI").then((module) => ({ default: module.SaranAI })));
 

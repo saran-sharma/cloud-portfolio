@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
-import { useTheme } from "./theme-provider";
+import { ArrowUpRight, Gamepad2, Menu, X } from "lucide-react";
 
 const links = [
   { href: "#top", label: "Home" },
@@ -11,8 +10,7 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
-export const Nav = () => {
-  const { theme, toggle } = useTheme();
+export const Nav = ({ onExploreCity }: { onExploreCity?: () => void }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("#top");
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -58,9 +56,11 @@ export const Nav = () => {
           ))}
         </ul>
         <div className="nav-actions">
-          <button className="icon-button theme-toggle" onClick={toggle} aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}>
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
+          {onExploreCity && (
+            <button type="button" className="nav-city" onClick={onExploreCity} aria-label="Switch to Saran City game mode">
+              <Gamepad2 size={16} aria-hidden="true" /> Saran City
+            </button>
+          )}
           <a href="#contact" className="nav-connect">Let's connect <ArrowUpRight size={15} /></a>
           <button ref={menuButton} className="icon-button menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="navigation-links">
             {open ? <X size={22} /> : <Menu size={22} />}
