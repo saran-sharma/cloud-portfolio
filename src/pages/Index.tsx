@@ -8,6 +8,7 @@ import { Certifications } from "@/components/sections/Certifications";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { ScrollProgress, ScrollSky } from "@/components/ScrollSky";
+import { ScrollFilm } from "@/components/ScrollFilm";
 import { TechMarquee } from "@/components/TechMarquee";
 import { useScrollEffects } from "@/hooks/use-scroll-effects";
 import { lazy, Suspense, useRef } from "react";
@@ -25,6 +26,7 @@ const Index = ({ onExploreCity }: { onExploreCity?: () => void }) => {
       <Nav onExploreCity={onExploreCity} />
       <main id="main-content" tabIndex={-1}>
         <Hero />
+        <ScrollFilm onExploreCity={onExploreCity} />
         <About />
         <TechMarquee />
         <Projects />

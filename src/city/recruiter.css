@@ -263,6 +263,33 @@
 /* Panels glow under the cursor. */
 .recruiter-city .feature, .recruiter-city .more-item > article, .recruiter-city .skill-row, .recruiter-city .experience-role, .recruiter-city .experience-themes, .recruiter-city .credential, .recruiter-city .cert-list, .recruiter-city .journey { background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), rgba(34, 230, 255, .11), transparent 70%), var(--sc-panel); }
 
+/* Scroll film: the opening clip, played by scrolling. A tall track pins a full-screen stage (position: sticky works
+   here because .recruiter-city clips overflow instead of hiding it). --tp is the scroll progress through the track,
+   written by ScrollFilm. Without it (reduced motion, Save-Data, phones) the track is a normal-height still. */
+.recruiter-city .film-track { position: relative; background: #07041a; border-block: 1px solid var(--sc-line); }
+.recruiter-city .film-track.is-live { height: 330vh; }
+.recruiter-city .film-stage { position: relative; overflow: hidden; height: clamp(420px, 78vh, 820px); }
+.recruiter-city .film-track.is-live .film-stage { position: sticky; top: 0; height: 100vh; height: 100dvh; }
+.recruiter-city .film-canvas, .recruiter-city .film-still { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.recruiter-city .film-still { object-fit: cover; object-position: 50% 0%; user-select: none; -webkit-user-drag: none; }
+.recruiter-city .film-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(7, 4, 26, .82) 0%, rgba(7, 4, 26, .5) 30%, rgba(7, 4, 26, 0) 56%), linear-gradient(180deg, #07041a 0%, rgba(7, 4, 26, 0) 16%, rgba(7, 4, 26, 0) 80%, #07041a 100%); }
+.recruiter-city .film-caption { position: absolute; left: max(48px, calc((100% - 1240px) / 2)); bottom: 14vh; max-width: min(34vw, 520px); opacity: clamp(0, calc((var(--tp, 1) - .04) * 7), 1); translate: 0 calc((1 - min(1, var(--tp, 1) * 6)) * 28px); }
+.recruiter-city .film-caption h2 { margin-top: 14px; font-size: clamp(2rem, 3.6vw, 3.4rem); text-shadow: none; filter: drop-shadow(0 2px 14px rgba(7, 4, 26, .85)); }
+.recruiter-city .film-caption h2 em { background: linear-gradient(100deg, #ffd27a, #ff9cc2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.recruiter-city .film-caption .eyebrow { color: #ffd9a0; text-shadow: 0 1px 12px rgba(7, 4, 26, .9); }
+.recruiter-city .film-meta { margin-top: 16px; font-family: 'IBM Plex Mono', monospace; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: var(--sc-cyan); text-shadow: 0 1px 12px #000; }
+.recruiter-city .film-caption .action-button { margin-top: 26px; }
+@media (max-width: 900px) {
+  .recruiter-city .film-track.is-live { height: 280vh; }
+  .recruiter-city .film-caption { left: 24px; right: 24px; bottom: 9vh; max-width: none; }
+  .recruiter-city .film-shade { background: linear-gradient(0deg, rgba(7, 4, 26, .92) 0%, rgba(7, 4, 26, .55) 34%, rgba(7, 4, 26, 0) 62%), linear-gradient(180deg, #07041a 0%, rgba(7, 4, 26, 0) 14%); }
+}
+@media (max-width: 640px) {
+  .recruiter-city .film-stage { height: clamp(460px, 78vh, 640px); }
+  .recruiter-city .film-caption { bottom: 5vh; }
+  .recruiter-city .film-caption h2 { font-size: 1.9rem; }
+}
+
 @media (max-width: 900px) {
   .recruiter-city .feature .feature-visual, .recruiter-city .feature.is-flipped .feature-visual { transform: translate3d(0, 36px, 0) scale(.98); translate: none; }
   .recruiter-city .feature.is-shown .feature-visual { transform: none; }
