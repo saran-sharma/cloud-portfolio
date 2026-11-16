@@ -4,6 +4,7 @@ import { DISTRICTS } from "@/city/data/districts";
 import { ProgressTracker } from "@/city/components/AchievementSystem";
 import { useCity } from "@/city/state/CityProvider";
 import { portfolio } from "@/data/portfolio";
+import { trackResumeDownload } from "@/lib/analytics";
 
 /** Persistent in-game navigation. Recruiter Mode is always one click away. */
 export const GameNavigation = () => {
@@ -16,8 +17,8 @@ export const GameNavigation = () => {
         <button type="button" className="sc-hud-brand" onClick={home} aria-label="SARAN.OS, go to the city map">SARAN<span>.OS</span></button>
         {scene.name !== "map" && (
           <>
-            <button type="button" className="sc-hud-btn" onClick={canGoBack ? back : home}><ArrowLeft size={16} /> <span>Back</span></button>
-            <button type="button" className="sc-hud-btn" onClick={home}><Home size={16} /> <span>Map</span></button>
+            <button type="button" className="sc-hud-btn" aria-label={canGoBack ? "Back to the previous screen" : "Back to the city map"} onClick={canGoBack ? back : home}><ArrowLeft size={16} aria-hidden="true" /> <span>Back</span></button>
+            <button type="button" className="sc-hud-btn" aria-label="Map" onClick={home}><Home size={16} aria-hidden="true" /> <span>Map</span></button>
           </>
         )}
         <div className="sc-hud-menu">
@@ -39,7 +40,7 @@ export const GameNavigation = () => {
       </div>
       <div className="sc-hud-right">
         <ProgressTracker />
-        <a className="sc-hud-btn is-resume" href={portfolio.profile.resumeUrl} download aria-label="Download resume"><Download size={16} /> <span>Resume</span></a>
+        <a className="sc-hud-btn is-resume" href={portfolio.profile.resumeUrl} download aria-label="Download resume" onClick={() => trackResumeDownload("game_hud")}><Download size={16} aria-hidden="true" /> <span>Resume</span></a>
         <button type="button" className="sc-recruiter" onClick={() => setMode("recruiter")}><Users size={16} /> <span>Recruiter Mode</span></button>
       </div>
     </header>

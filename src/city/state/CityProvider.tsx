@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import { portfolio } from "@/data/portfolio";
+import { trackRecruiterModeOpen } from "@/lib/analytics";
 import { DISTRICTS, MISSIONS } from "@/city/data/districts";
 import {
   earnedBadges,
@@ -62,6 +63,13 @@ export function CityProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => saveProgress(progress), [progress]);
 
+  const trackedEntry = useRef(false);
+  useEffect(() => {
+    if (trackedEntry.current) return;
+    trackedEntry.current = true;
+    if (modeRef.current === "recruiter") trackRecruiterModeOpen("direct_link");
+  }, []);
+
   useEffect(() => {
     if (scene.name === "district") setPlayerAt(scene.id);
     if (scene.name === "mission") setPlayerAt(MISSIONS[scene.id].districtId);
@@ -111,6 +119,7 @@ export function CityProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setMode = useCallback((next: Mode, anchor?: string) => {
+    if (next === "recruiter" && modeRef.current !== "recruiter") trackRecruiterModeOpen("game", sceneRef.current.name);
     scroll.current[modeRef.current] = window.scrollY;
     pendingAnchor.current = anchor ?? null;
     setModeState(next);

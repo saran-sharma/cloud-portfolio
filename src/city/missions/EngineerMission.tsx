@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Download, Github, Linkedin, Mail } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
+import { trackResumeDownload } from "@/lib/analytics";
 import { useCity } from "@/city/state/CityProvider";
 
 const TABS = ["Profile", "Experience", "Credentials", "Contact"] as const;
@@ -65,7 +66,7 @@ export const EngineerMission = ({ onComplete }: { onComplete: () => void }) => {
               <li><a href={`mailto:${p.email}`}><Mail size={16} /> {p.email}</a></li>
               <li><a href={p.linkedin} target="_blank" rel="noreferrer"><Linkedin size={16} /> LinkedIn</a></li>
               <li><a href={p.github} target="_blank" rel="noreferrer"><Github size={16} /> GitHub</a></li>
-              <li><a href={p.resumeUrl} download><Download size={16} /> Download resume</a></li>
+              <li><a href={p.resumeUrl} download onClick={() => trackResumeDownload("game_dossier")}><Download size={16} /> Download resume</a></li>
             </ul>
             <div className="sc-actions"><button type="button" className="sc-btn" onClick={() => setMode("recruiter", "contact")}>Open the contact form in Recruiter Mode</button></div>
           </>

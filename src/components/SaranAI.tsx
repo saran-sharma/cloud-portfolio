@@ -3,6 +3,7 @@ import { MessageSquare, Send } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { getPortfolioResponse } from "@/lib/portfolio-assistant";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { trackResumeDownload } from "@/lib/analytics";
 
 type Message = { role: "guide" | "visitor"; text: string };
 
@@ -23,7 +24,7 @@ export const SaranAI = () => {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><button className="assistant-launcher"><MessageSquare size={14} /><span>SaranAI</span></button></DialogTrigger>
+      <DialogTrigger asChild><button className="assistant-launcher" aria-label="SaranAI"><MessageSquare size={16} aria-hidden="true" /><span aria-hidden="true">SaranAI</span></button></DialogTrigger>
       <DialogContent className="assistant-dialog">
         <DialogTitle className="assistant-title">SaranAI / Portfolio guide</DialogTitle>
         <DialogDescription className="assistant-description">A local, rule-based guide, not a generative AI service. Questions stay in this browser and answers use only the public portfolio.</DialogDescription>
@@ -32,7 +33,7 @@ export const SaranAI = () => {
         </div>
         <div className="assistant-actions">
           <DialogClose asChild><a href="#projects">Explore projects</a></DialogClose>
-          <a href={portfolio.profile.resumeUrl} download>Download resume</a>
+          <a href={portfolio.profile.resumeUrl} download onClick={() => trackResumeDownload("assistant")}>Download resume</a>
           <a href={portfolio.profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
           <a href={portfolio.profile.github} target="_blank" rel="noreferrer">GitHub</a>
         </div>

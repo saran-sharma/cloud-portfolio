@@ -1,19 +1,29 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import emailjs from "@emailjs/browser";
+import { track } from "@vercel/analytics";
 import App from "@/App";
 import { Contact } from "@/components/sections/Contact";
 import { Projects } from "@/components/sections/Projects";
 import { SaranAI } from "@/components/SaranAI";
 import { portfolio } from "@/data/portfolio";
 import { characterAlt, characterImage } from "@/city/character";
+import { isEmailJsConfigured, openMailto } from "@/lib/contact";
 import { getPortfolioResponse } from "@/lib/portfolio-assistant";
 
 vi.mock("@emailjs/browser", () => ({ default: { send: vi.fn() } }));
+vi.mock("@vercel/analytics", () => ({ track: vi.fn() }));
+vi.mock("@/lib/contact", async (importOriginal) => ({ ...(await importOriginal<typeof import("@/lib/contact")>()), openMailto: vi.fn() }));
 vi.mock("sonner", async (importOriginal) => {
   const original = await importOriginal<typeof import("sonner")>();
   return { ...original, toast: { error: vi.fn(), success: vi.fn() } };
 });
+
+const stubEmailJs = () => {
+  vi.stubEnv("VITE_EMAILJS_SERVICE_ID", "test-service");
+  vi.stubEnv("VITE_EMAILJS_TEMPLATE_ID", "test-template");
+  vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "test-public-key");
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -125,12 +135,18 @@ const fillContact = () => {
 };
 
 describe("Contact delivery", () => {
-  it("makes unconfigured delivery explicit without faking success", () => {
+  it("falls back to a pre-filled email without faking delivery or success", () => {
     render(<Contact />);
+    expect(screen.getByRole("button", { name: "Write in my email app" })).toBeInTheDocument();
     fillContact();
     fireEvent.submit(screen.getByRole("form", { name: "Contact Saran" }));
-    expect(screen.getByText(/The contact form is not configured/)).toBeInTheDocument();
     expect(emailjs.send).not.toHaveBeenCalled();
+    expect(openMailto).toHaveBeenCalledTimes(1);
+    const href = vi.mocked(openMailto).mock.calls[0][0];
+    expect(href).toContain(`mailto:${portfolio.profile.email}?subject=`);
+    expect(decodeURIComponent(href)).toContain("A data platform engineering opportunity.");
+    expect(screen.getByText(/Your email app should open/)).toBeInTheDocument();
+    expect(screen.queryByText(/Message sent/)).not.toBeInTheDocument();
     expect(screen.getByLabelText("Your name")).toHaveValue("Test Visitor");
   });
 
@@ -141,12 +157,11 @@ describe("Contact delivery", () => {
     fireEvent.submit(screen.getByRole("form", { name: "Contact Saran" }));
     expect(screen.getByText(/Please fill in your name/)).toBeInTheDocument();
     expect(emailjs.send).not.toHaveBeenCalled();
+    expect(openMailto).not.toHaveBeenCalled();
   });
 
   it("preserves EmailJS parameters and clears inputs only after successful delivery", async () => {
-    vi.stubEnv("VITE_EMAILJS_SERVICE_ID", "test-service");
-    vi.stubEnv("VITE_EMAILJS_TEMPLATE_ID", "test-template");
-    vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "test-public-key");
+    stubEmailJs();
     vi.mocked(emailjs.send).mockResolvedValue({ status: 200, text: "OK" });
     render(<Contact />);
     fillContact();
@@ -160,23 +175,91 @@ describe("Contact delivery", () => {
       page_url: window.location.href,
     }, { publicKey: "test-public-key" });
     expect(screen.getByRole("button", { name: "Sending..." })).toBeDisabled();
+    expect(screen.getByRole("form", { name: "Contact Saran" })).toHaveAttribute("aria-busy", "true");
     await screen.findByText("Message sent. Thanks for reaching out.");
     expect(screen.getByLabelText("Your name")).toHaveValue("");
   });
 
-  it("surfaces delivery failures and keeps the visitor's message", async () => {
-    vi.stubEnv("VITE_EMAILJS_SERVICE_ID", "test-service");
-    vi.stubEnv("VITE_EMAILJS_TEMPLATE_ID", "test-template");
-    vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "test-public-key");
+  it("ignores a second submission while the first is still sending", async () => {
+    stubEmailJs();
+    let finish: (value: { status: number; text: string }) => void = () => {};
+    vi.mocked(emailjs.send).mockReturnValue(new Promise((resolve) => { finish = resolve; }));
+    render(<Contact />);
+    fillContact();
+    const form = screen.getByRole("form", { name: "Contact Saran" });
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+    expect(emailjs.send).toHaveBeenCalledTimes(1);
+    await act(async () => { finish({ status: 200, text: "OK" }); });
+    await screen.findByText("Message sent. Thanks for reaching out.");
+  });
+
+  it("surfaces delivery failures, keeps the visitor's message and offers the email fallback", async () => {
+    stubEmailJs();
     vi.mocked(emailjs.send).mockRejectedValue(new Error("Simulated delivery failure"));
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
     render(<Contact />);
     fillContact();
     fireEvent.submit(screen.getByRole("form", { name: "Contact Saran" }));
-    await screen.findByText("Message could not be sent. Please email me directly.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Message could not be sent. Please email me directly.");
     expect(screen.getByLabelText("Your name")).toHaveValue("Test Visitor");
+    const fallback = screen.getByRole("link", { name: "send it from your email app" });
+    expect(fallback.getAttribute("href")).toContain(`mailto:${portfolio.profile.email}`);
+    expect(decodeURIComponent(fallback.getAttribute("href") ?? "")).toContain("A data platform engineering opportunity.");
+    expect(screen.getByRole("button", { name: "Send message" })).toBeEnabled();
     expect(error).toHaveBeenCalled();
   });
+
+  it("reports rate limiting and timeouts clearly", async () => {
+    stubEmailJs();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.mocked(emailjs.send).mockRejectedValueOnce({ status: 429, text: "Too Many Requests" });
+    render(<Contact />);
+    fillContact();
+    fireEvent.submit(screen.getByRole("form", { name: "Contact Saran" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(/Too many messages/);
+  });
+
+  it("treats .env.example placeholder values as not configured and uses the email fallback", () => {
+    vi.stubEnv("VITE_EMAILJS_SERVICE_ID", "your_service_id");
+    vi.stubEnv("VITE_EMAILJS_TEMPLATE_ID", "your_template_id");
+    vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "your_public_key");
+    render(<Contact />);
+    expect(screen.getByRole("button", { name: "Write in my email app" })).toBeInTheDocument();
+    fillContact();
+    fireEvent.submit(screen.getByRole("form", { name: "Contact Saran" }));
+    expect(emailjs.send).not.toHaveBeenCalled();
+    expect(openMailto).toHaveBeenCalledTimes(1);
+  });
+
+  it("is only configured when all three values are real", () => {
+    expect(isEmailJsConfigured("service_a1", "template_b2", "pk_c3")).toBe(true);
+    expect(isEmailJsConfigured("service_a1", "template_b2", "")).toBe(false);
+    expect(isEmailJsConfigured("service_a1", undefined, "pk_c3")).toBe(false);
+    expect(isEmailJsConfigured("service_a1", "your_template_id", "pk_c3")).toBe(false);
+  });
+
+  it("never exposes a private key or non-public EmailJS variable", () => {
+    const names = Object.keys(import.meta.env).filter((key) => key.includes("EMAILJS"));
+    for (const name of names) expect(name).toMatch(/^VITE_EMAILJS_(SERVICE_ID|TEMPLATE_ID|PUBLIC_KEY)$/);
+  });
+});
+
+describe("Analytics events", () => {
+  it("tracks resume downloads with a fixed source label and no visitor data", async () => {
+    render(<Contact />);
+    const resume = screen.getByRole("link", { name: /Resume/ });
+    resume.addEventListener("click", (event) => event.preventDefault());
+    fireEvent.click(resume);
+    await waitFor(() => expect(track).toHaveBeenCalledWith("resume_download", { source: "contact" }));
+  });
+
+  it("tracks a direct Recruiter Mode visit once", async () => {
+    render(<App />);
+    await screen.findByRole("button", { name: "SaranAI" }, { timeout: 10000 });
+    await waitFor(() => expect(track).toHaveBeenCalledWith("recruiter_mode_open", { source: "direct_link" }));
+    expect(vi.mocked(track).mock.calls.filter(([name]) => name === "recruiter_mode_open")).toHaveLength(1);
+  }, 20000);
 });
 
 describe("Local portfolio guide", () => {

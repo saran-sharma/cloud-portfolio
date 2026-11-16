@@ -1,5 +1,4 @@
 import { Suspense, lazy, useEffect } from "react";
-import { Gamepad2 } from "lucide-react";
 import { useCity } from "@/city/state/CityProvider";
 
 const Portfolio = lazy(() => import("@/pages/Index"));
@@ -42,9 +41,6 @@ export const RecruiterMode = () => {
         <Portfolio onExploreCity={() => setMode("game")} />
         <RestorePosition />
       </Suspense>
-      <button type="button" className="sc-switch" onClick={() => setMode("game")}>
-        <Gamepad2 size={16} aria-hidden="true" /> <span>Explore Saran City</span>
-      </button>
     </div>
   );
 };

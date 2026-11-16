@@ -34,9 +34,14 @@
 .recruiter-city .nav-connect:hover { background: #6af0ff; }
 .recruiter-city .nav-city { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 16px; font-weight: 700; font-size: .9375rem; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: linear-gradient(110deg, var(--sc-magenta), var(--sc-orange)); border-radius: 4px; box-shadow: 0 8px 28px rgba(255, 46, 147, .28); transition: transform .2s, box-shadow .2s; white-space: nowrap; }
 .recruiter-city .nav-city:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(255, 46, 147, .4); }
-/* The header carries the switch from tablet up; the floating pill is for phones only. */
-@media (min-width: 641px) { .recruiter-city .sc-switch { display: none; } }
-@media (max-width: 640px) { .recruiter-city .nav-city { display: none; } }
+/* The header carries the switch to the game on every screen size, so nothing floats over content.
+   Contact is in the nav links, so "Let's connect" gives way before the bar gets crowded. */
+@media (max-width: 1279px) { .recruiter-city .nav-connect { display: none; } .recruiter-city .nav-links { gap: 22px; } }
+@media (max-width: 1100px) {
+  .recruiter-city .nav-links { gap: 16px; }
+  .recruiter-city .nav-city { width: 44px; padding: 0; justify-content: center; }
+  .recruiter-city .nav-city span { display: none; }
+}
 .recruiter-city .icon-button:hover { color: var(--sc-cyan); }
 
 /* Buttons: same shapes and hover feedback as .sc-btn. */
@@ -133,6 +138,11 @@
 
 /* Portaled and floating UI that renders with the Recruiter Mode tokens. */
 .recruiter-city .assistant-launcher { background: #0b0925; color: var(--sc-cyan); border-color: rgba(34, 230, 255, .6); border-radius: 4px; }
+@media (max-width: 640px) {
+  .recruiter-city .assistant-launcher { border-radius: 50%; }
+  /* On phones the launcher lives in the sticky header, so it can never float over the text being read. */
+  .recruiter-city .assistant-launcher { top: 10px; bottom: auto; right: 116px; z-index: 45; }
+}
 .recruiter-city .assistant-form button, .sc-active .assistant-form button { color: #06121a; }
 
 @media (max-width: 1100px) {

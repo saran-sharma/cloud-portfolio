@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { OpenCaseStudy } from "@/components/sections/Projects";
+import { trackResumeDownload } from "@/lib/analytics";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { DistrictEnvironment } from "@/city/components/DistrictEnvironment";
 import { MissionBoard } from "@/city/components/MissionBoard";
@@ -28,16 +29,17 @@ export const DistrictScene = ({ id, intro = true }: { id: DistrictId; intro?: bo
   }, [showIntro]);
 
   useEffect(() => {
+    if (showIntro) return;
     if (!discoverDistrict(id)) return;
     setUnlock(true);
     const timer = window.setTimeout(() => setUnlock(false), 2600);
     return () => window.clearTimeout(timer);
-  }, [id, discoverDistrict]);
+  }, [id, discoverDistrict, showIntro]);
 
   const isHq = id === "headquarters";
 
   return (
-    <section className="sc-district" style={{ ["--accent" as string]: district.accent }} aria-labelledby="sc-district-title">
+    <section className={`sc-district ${showIntro ? "is-intro" : ""}`} style={{ ["--accent" as string]: district.accent }} aria-labelledby="sc-district-title">
       <DistrictEnvironment id={district.environment} animate={!reduced} />
       <div className="sc-district-shade" aria-hidden="true" />
 
@@ -82,7 +84,7 @@ export const DistrictScene = ({ id, intro = true }: { id: DistrictId; intro?: bo
                   <span>{portfolio.certifications[0].name}</span>
                   <span>{portfolio.education[0].degree}, {portfolio.education[0].school}</span>
                   <p className="sc-actions">
-                    <a className="sc-btn is-quiet" href={portfolio.profile.resumeUrl} download>Download resume</a>
+                    <a className="sc-btn is-quiet" href={portfolio.profile.resumeUrl} download onClick={() => trackResumeDownload("game_hq")}>Download resume</a>
                     <button type="button" className="sc-btn is-quiet" onClick={() => setMode("recruiter", "contact")}>Contact form</button>
                   </p>
                 </div>

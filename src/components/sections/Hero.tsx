@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
+import { trackResumeDownload } from "@/lib/analytics";
 import { CitySkyline } from "@/city/components/CitySkyline";
 import { useSkyParallax } from "@/city/hooks/use-sky-parallax";
 import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
@@ -51,7 +52,7 @@ export const Hero = () => {
           </ul>
           <div className="hero-cta">
             <a className="action-button action-primary" href="#projects">Explore My Work <ArrowRight size={18} /></a>
-            <a className="action-button action-secondary" href={p.resumeUrl} download><Download size={17} /> Download Resume</a>
+            <a className="action-button action-secondary" href={p.resumeUrl} download onClick={() => trackResumeDownload("recruiter_hero")}><Download size={17} /> Download Resume</a>
           </div>
           <div className="hero-socials">
             <a href={p.linkedin} target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={15} /></a>
