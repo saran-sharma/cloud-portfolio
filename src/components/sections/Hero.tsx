@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
 import { trackResumeDownload } from "@/lib/analytics";
 import { CitySkyline } from "@/city/components/CitySkyline";
+import { useReducedMotion } from "@/city/hooks/use-reduced-motion";
 import { useSkyParallax } from "@/city/hooks/use-sky-parallax";
 import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
+import { recruiterIntroVideo, shouldPlayIntroVideo } from "@/city/videos";
 
 const specialties = ["Azure", "Databricks", "Fabric", "PySpark", "DevOps", "AI"];
 
@@ -12,9 +15,28 @@ export const Hero = () => {
   const p = portfolio.profile;
   const { ref, interactive, handlers } = usePointerTilt<HTMLElement>();
   const sky = useSkyParallax<HTMLElement>();
+  const reduced = useReducedMotion();
+  const [videoFailed, setVideoFailed] = useState(false);
+  const showSkyVideo = recruiterIntroVideo.hasVideo && !videoFailed && !reduced && shouldPlayIntroVideo({ allowSmallViewport: true });
+
   return (
     <section id="top" className="hero" ref={sky}>
       <div className="hero-sky" aria-hidden="true">
+        {showSkyVideo && (
+          <video
+            className="hero-sky-video"
+            muted
+            playsInline
+            autoPlay
+            loop
+            preload="none"
+            aria-hidden="true"
+            onError={() => setVideoFailed(true)}
+          >
+            {recruiterIntroVideo.webm && <source src={recruiterIntroVideo.webm} type="video/webm" />}
+            {recruiterIntroVideo.mp4 && <source src={recruiterIntroVideo.mp4} type="video/mp4" />}
+          </video>
+        )}
         <i className="sc-sun" />
         <CitySkyline />
       </div>

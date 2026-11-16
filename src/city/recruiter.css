@@ -55,6 +55,7 @@
 /* Hero: the intro screen composition (sunset sky, skyline, framed portrait). */
 .recruiter-city .hero { background: linear-gradient(180deg, #080520 0%, #1d0c40 52%, #4a1260 80%, #7a1f6a 100%); border-bottom: 1px solid var(--sc-line); }
 .hero-sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.hero-sky-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .26; pointer-events: none; mix-blend-mode: screen; }
 .hero-sky svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 30%; }
 .hero-sky .sc-sun { left: 50%; bottom: 12%; width: min(34vw, 420px); opacity: .9; }
 .recruiter-city .hero-title .is-accent { background: linear-gradient(100deg, var(--sc-orange), var(--sc-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -171,5 +172,6 @@
 @media (prefers-reduced-motion: reduce) {
   .recruiter-city { animation: none; }
   .recruiter-city .hero-photo, .recruiter-city .hero-photo img, .recruiter-city .sc-window { animation: none !important; }
+  .hero-sky-video { display: none; }
   .recruiter-city *, .recruiter-city *::before, .recruiter-city *::after { transition-duration: .01ms !important; }
 }

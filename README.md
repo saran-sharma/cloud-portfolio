@@ -113,16 +113,33 @@ button) and `/?mode=recruiter` opens it directly.
 
 ### Motion
 
-All motion is code-based (CSS and a small requestAnimationFrame hook); there is no video
-and no filter trick.
+All motion is code-based (CSS and a small requestAnimationFrame hook); no video file ships
+today and nothing simulates one with filters.
 
-- Character entrance, then a slow idle float and faint breathing scale.
+- Character entrance, then a slow idle float and faint breathing scale, an occasional
+  rim-light sheen and a brief HUD lock-on frame during the opening.
+- **Replay intro** on the opening menu re-runs the entrance; it never replays on its own.
 - Sun and skyline drift against the pointer, driven by
   [use-sky-parallax.ts](src/city/hooks/use-sky-parallax.ts) from local pointer events only.
 - Skyline windows twinkle ([CitySkyline.tsx](src/city/components/CitySkyline.tsx)).
 - Screen and district transitions, plus hover states on cards, chips and tiles.
 - `prefers-reduced-motion` turns the idle, twinkle and parallax motion off. Parallax also
   stays off for touch devices and screens under 768px.
+
+#### Optional intro videos (not supplied yet)
+
+[videos.ts](src/city/videos.ts) picks up these files if they are added; with none present
+the existing code-based intro and hero are used unchanged.
+
+| Mode | Path | Length | Poster / fallback |
+| --- | --- | --- | --- |
+| Saran City | `src/assets/videos/saran-city-intro.webm` (+ optional `.mp4`) | 5-7 s, played once | `saran-character.png` |
+| Recruiter Mode | `src/assets/videos/recruiter-tech-intro.webm` (+ optional `.mp4`) | 2-3 s, muted background | existing hero sky |
+
+Videos are muted, `preload="none"`, and only mounted when their mode opens. They are
+skipped for `prefers-reduced-motion`, Save-Data, and (Saran City only) viewports under
+768px, and any load error falls back to the existing artwork. The files must be generated
+externally; no placeholder video is included.
 
 Known limitations: there is no sound; the player is a portrait, not a full-body
 avatar; the missions are simulations of the kind of work done, not real client
