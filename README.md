@@ -87,8 +87,9 @@ button) and `/?mode=recruiter` opens it directly.
   character module. Colour tokens come from [city.css](src/city/city.css) and the
   structural restyle is in [recruiter.css](src/city/recruiter.css), so the content
   components are unchanged. The light theme and its toggle were removed so there is
-  one visual identity. The switch back to the game is in the header on tablet and
-  desktop and a floating button on phones.
+  one visual identity. The switch back to the game is a button in the header on every
+  screen size (icon only on small screens), so nothing floats over the page. On phones the
+  SaranAI launcher also sits in the header.
 - **Code:** everything lives in [src/city](src/city). No new dependencies.
   [CityApp.tsx](src/city/components/CityApp.tsx) switches between the game and the
   portfolio ([Index.tsx](src/pages/Index.tsx)).
@@ -125,11 +126,13 @@ and no filter trick.
 
 Known limitations: there is no sound; the player is a portrait, not a full-body
 avatar; the missions are simulations of the kind of work done, not real client
-systems; the mini-map is shown on screens 1600px or wider. On phones the opening screen
-shows the menu first and the character below it. The job title on the resume
-("Senior Cloud & DevOps Engineer") still differs from the site ("Data Platform
-Engineer | AI & Cloud"), and `public/resume.pdf` is the older resume. Both are
-decisions for the owner and are listed in [docs/content-todo.md](docs/content-todo.md).
+systems; the mini-map is shown on screens 1600px or wider. The world map is a flat,
+code-drawn city plan (coastline, parks, one landmark cluster per district). It is not a
+realistic coastal city; the assets that would get it there are listed in
+[docs/saran-city-asset-requirements.md](docs/saran-city-asset-requirements.md). The job
+title on the resume ("Senior Cloud & DevOps Engineer") still differs from the site
+("Data Platform Engineer | AI & Cloud"), and `public/resume.pdf` is the older resume. Both
+are decisions for the owner and are listed in [docs/content-todo.md](docs/content-todo.md).
 
 ## Portfolio guide
 
@@ -150,7 +153,10 @@ npm run build
 Tests cover the hero identity, anchors, the menu, the single dark theme, the 404 page,
 all eight case studies, contact delivery (EmailJS is mocked), the local guide, the
 Saran City game logic (XP, badges, persistence, synthetic data) and its end-to-end
-flow. Latest run: TypeScript clean, 63 of 63 tests pass, production build passes.
+flow. Latest run: TypeScript clean, 70 of 70 tests pass, production build passes. Lint
+reports 2 errors and 9 warnings, all pre-existing and identical to `main`. See
+[docs/remediation-status.md](docs/remediation-status.md) for what is verified and what still
+needs configuration.
 
 `npm run lint` still reports two errors in unused shadcn files
 ([command.tsx](src/components/ui/command.tsx) and
@@ -166,25 +172,81 @@ from the same portrait and headline.
 
 ## Contact Form
 
-The contact form uses EmailJS.
+The contact form sends through [EmailJS](https://www.emailjs.com/) directly from the
+browser. All three values are **public identifiers**: they are visible in the shipped
+JavaScript by design. Never put an EmailJS private key or access token in this project.
 
-1. Create an EmailJS service and email template.
-2. Copy `.env.example` to `.env`.
-3. Fill in:
-   - `VITE_EMAILJS_SERVICE_ID`
-   - `VITE_EMAILJS_TEMPLATE_ID`
-   - `VITE_EMAILJS_PUBLIC_KEY`
+### Variables the code reads
 
-Recommended EmailJS template variables:
+| Variable | Where to find it in EmailJS |
+| --- | --- |
+| `VITE_EMAILJS_SERVICE_ID` | Email Services, the "Service ID" (looks like `service_xxxxxxx`) |
+| `VITE_EMAILJS_TEMPLATE_ID` | Email Templates, the "Template ID" (looks like `template_xxxxxxx`) |
+| `VITE_EMAILJS_PUBLIC_KEY` | Account, then General, "Public Key" (about 16 characters) |
 
-- `from_name`
-- `from_email`
-- `reply_to`
-- `to_email`
-- `message`
-- `page_url`
+They are read in [Contact.tsx](src/components/sections/Contact.tsx) and typed in
+[vite-env.d.ts](src/vite-env.d.ts). `.env.example` lists them with placeholders only; `.env`
+is git-ignored.
 
-If configuration is absent, the site displays an explicit delivery notice and
-direct email link. Errors are logged and shown to the visitor; the form is only
-cleared after EmailJS confirms successful delivery. Existing environment values
-are not modified.
+### Local setup
+1. Copy `.env.example` to `.env`.
+2. Replace the placeholders with your own values from the EmailJS dashboard.
+3. Restart `npm run dev`. Vite only reads `.env` at start-up.
+
+### Vercel setup
+1. Vercel dashboard, your project, **Settings, Environment Variables**.
+2. Add the three variables above with exactly those names, for **Production** (and
+   Preview if you want the form to work on preview deployments).
+3. **Redeploy.** Vite inlines these values at build time, so changing them does not affect an
+   existing deployment until it is rebuilt (Deployments, the latest one, Redeploy).
+4. In EmailJS, open **Account, Security** and add your domain
+   (`saran-cloud-portfolio.vercel.app`) to the allowed origins if domain restriction is on.
+
+### EmailJS template
+Recommended template variables: `from_name`, `from_email`, `reply_to`, `to_email`, `message`
+and `page_url`. Set the template's "To email" to your inbox and "Reply-To" to `{{reply_to}}`.
+
+### Behaviour
+- **Not configured** (any variable missing, or still a `your_...` placeholder): the button
+  reads "Write in my email app" and opens a pre-filled `mailto:` message instead. Nothing
+  claims delivery.
+- **Sending:** the button shows "Sending...", is disabled, the fields are locked and the form
+  is `aria-busy`. A second submit while one is in flight is ignored, so double clicks send once.
+  A request that takes longer than 15 seconds is treated as failed.
+- **Success:** a confirmation appears and the form is cleared only after EmailJS confirms.
+- **Failure:** a clear message (with a specific one for rate limiting), the visitor's text is
+  kept, the button is usable again, and a "send it from your email app" link carries the
+  message as a `mailto:`.
+
+### Status of delivery
+Delivery is **not verified end to end, and the form is not yet configured with real
+credentials.** When I tested, the local `.env` still held the `.env.example` placeholders for
+the Template ID and Public Key (only the Service ID had a different value). A submission with
+those was rejected by EmailJS with HTTP 400, "The Public Key is invalid", so no email was
+delivered. That result says nothing about your real EmailJS account.
+
+The form now treats any `your_...` placeholder value as **not configured** and uses the
+`mailto:` fallback instead, so copying `.env.example` unchanged can never produce a form that
+looks live but cannot send. To finish: put the real values in `.env` and in Vercel, redeploy,
+then submit the live form once and confirm the email arrives in your inbox. Until you have
+seen that email, treat delivery as unverified.
+
+## Analytics
+
+[Vercel Web Analytics](https://vercel.com/docs/analytics) is mounted once in
+[App.tsx](src/App.tsx). Custom events are sent from [analytics.ts](src/lib/analytics.ts) and use
+fixed labels only, never anything a visitor typed:
+
+- `resume_download` with `source`: `recruiter_hero`, `contact`, `assistant`, `game_hud`,
+  `game_intro`, `game_hq` or `game_dossier`.
+- `recruiter_mode_open` with `source`: `direct_link` (landing on `?mode=recruiter`) or `game`
+  (switching from the game, with `from` set to the scene name).
+
+Custom events appear in the Vercel dashboard only if your plan includes them; page views and
+visitors work on all plans. Ad blockers can hide all of it.
+
+**Verification status:** in a local browser test the events are queued on `window.va` with the
+labels above and no visitor data, and the Analytics script path is present in the production
+bundle. **Ingestion by Vercel is not verified.** The script only exists on a Vercel
+deployment, so confirm by opening the live site, downloading the resume once, and checking
+Analytics in the Vercel dashboard (custom events need a plan that includes them).

@@ -24,33 +24,41 @@ function random(seed: number) {
   };
 }
 
-const HEIGHT_RANGE: Record<District["environment"], [number, number]> = {
-  docks: [8, 18],
-  heights: [26, 64],
-  works: [14, 32],
-  labs: [18, 44],
-  ops: [22, 52],
-  hq: [20, 48],
-};
+const accentOf = (id: string) => DISTRICTS.find((district) => district.id === id)?.accent ?? "#22e6ff";
 
-type Block = { x: number; y: number; w: number; h: number; d: number; windows: { x: number; y: number }[] };
+type Lot = { x: number; y: number; w: number; h: number; dense: boolean };
 
-function blocksFor(district: District, index: number): Block[] {
+/** Flat street lots for a district, like a city-plan map. Deterministic, with a clear plaza under the marker. */
+function lotsFor(district: District, index: number): Lot[] {
   const next = random(index * 977 + 13);
-  const [minH, maxH] = HEIGHT_RANGE[district.environment];
-  const blocks: Block[] = [];
-  for (let i = 0; i < 9; i += 1) {
-    const angle = next() * Math.PI * 2;
-    const radius = 34 + next() * 58;
-    const w = 14 + next() * 14;
-    const h = minH + next() * (maxH - minH);
-    const x = district.x + Math.cos(angle) * radius - w / 2;
-    const y = district.y + Math.sin(angle) * radius * 0.7 + 12;
-    const windows = Array.from({ length: 5 }, () => ({ x: x + 2 + next() * (w - 6), y: y - h + 3 + next() * (h - 8) }));
-    blocks.push({ x, y, w, h, d: 7, windows });
+  const cols = 8;
+  const rows = 6;
+  const cw = 24;
+  const ch = 16;
+  const gap = 5;
+  const width = cols * (cw + gap) - gap;
+  const height = rows * (ch + gap) - gap;
+  const lots: Lot[] = [];
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const x = district.x - width / 2 + col * (cw + gap);
+      const y = district.y + 8 - height / 2 + row * (ch + gap);
+      const skip = next() < 0.16;
+      const w = cw - next() * 5;
+      const h = ch - next() * 4;
+      const dense = next() < 0.3;
+      if (skip || Math.hypot(x + cw / 2 - district.x, (y + ch / 2 - district.y) * 1.3) < 30) continue;
+      lots.push({ x, y, w, h, dense });
+    }
   }
-  return blocks.sort((a, b) => a.y - b.y);
+  return lots;
 }
+
+const PARKS = [
+  { x: 432, y: 345, rx: 52, ry: 24 },
+  { x: 732, y: 325, rx: 44, ry: 22 },
+  { x: 722, y: 528, rx: 62, ry: 18 },
+];
 
 function pointOnRoad(t: number, from: [number, number], control: [number, number], to: [number, number]) {
   const u = 1 - t;
@@ -77,6 +85,69 @@ const Palm = ({ x, y }: { x: number; y: number }) => (
     ))}
   </g>
 );
+
+const CONTAINERS: [number, number, string][] = [[70, 436, "#ff9a3c"], [82, 436, "#ff2e93"], [94, 436, "#ffd36a"], [106, 436, "#22e6ff"], [76, 428, "#ffd36a"], [88, 428, "#ff9a3c"]];
+
+/** A few deliberate pictorial landmarks, one cluster per district, drawn flat like a map legend. */
+const Landmarks = () => {
+  const docks = accentOf("data-docks");
+  const heights = accentOf("cloud-heights");
+  const works = accentOf("automation-works");
+  const labs = accentOf("neon-ai-labs");
+  const ops = accentOf("operations-hq");
+  const hq = accentOf("headquarters");
+  return (
+    <g strokeLinejoin="round" strokeLinecap="round">
+      {/* Data Docks: piers, container stacks, a gantry crane and storage tanks */}
+      <rect x="70" y="448" width="64" height="9" fill="#0d2a63" stroke={docks} strokeOpacity="0.6" />
+      <rect x="96" y="474" width="52" height="8" fill="#0d2a63" stroke={docks} strokeOpacity="0.6" />
+      {CONTAINERS.map(([x, y, color]) => <rect key={`${x}-${y}`} x={x} y={y} width="10" height="7" fill={color} fillOpacity="0.85" />)}
+      <path d="M122,448 V418 H146 M122,418 L116,430 M146,418 V430" fill="none" stroke={docks} strokeWidth="1.8" strokeOpacity="0.9" />
+      {[[206, 470], [224, 476], [242, 468]].map(([x, y]) => <circle key={x} cx={x} cy={y} r="9" fill="#0d3a73" stroke={docks} strokeOpacity="0.7" />)}
+
+      {/* Cloud Heights: a small tower cluster */}
+      <g fill="#0b0a26" stroke={heights} strokeOpacity="0.9" strokeWidth="1.3">
+        <rect x="258" y="146" width="13" height="40" />
+        <rect x="274" y="158" width="11" height="28" />
+        <rect x="288" y="152" width="13" height="34" />
+        <path d="M264.5,146 V134" fill="none" />
+      </g>
+      <g stroke={heights} strokeOpacity="0.8" strokeWidth="1.2">
+        {[154, 164, 174].map((y) => <path key={y} d={`M262,${y} h5 M292,${y + 2} h5`} />)}
+      </g>
+
+      {/* Automation Works: smokestacks and a sawtooth factory roof */}
+      <rect x="660" y="372" width="9" height="30" fill="#2a1c3d" stroke={works} strokeOpacity="0.7" />
+      <rect x="676" y="380" width="7" height="22" fill="#2a1c3d" stroke={works} strokeOpacity="0.7" />
+      <path d="M648,490 V470 L661,460 V470 L674,460 V470 L687,460 V470 L700,460 V490 Z" fill="#2a1c3d" stroke={works} strokeOpacity="0.85" strokeWidth="1.4" />
+
+      {/* Neon AI Labs: research dome and a small network */}
+      <path d="M868,172 A18,18 0 0 1 904,172 Z" fill="#1d0b33" stroke={labs} strokeWidth="1.6" strokeOpacity="0.95" />
+      <path d="M862,172 H910" stroke={labs} strokeWidth="1.6" strokeOpacity="0.8" fill="none" />
+      <path d="M792,154 L812,142 L834,152 L852,140" fill="none" stroke={labs} strokeOpacity="0.6" strokeWidth="1.2" strokeDasharray="3 3" />
+      {[[792, 154], [812, 142], [834, 152], [852, 140]].map(([x, y]) => <circle key={x} cx={x} cy={y} r="3.2" fill={labs} fillOpacity="0.9" />)}
+
+      {/* Operations HQ: radar dish and monitor wall */}
+      <path d="M524,216 Q540,190 556,216" fill="none" stroke={ops} strokeWidth="1.8" strokeOpacity="0.95" />
+      <path d="M540,204 V220 M534,220 H546" fill="none" stroke={ops} strokeWidth="1.6" strokeOpacity="0.9" />
+      <path d="M560,196 q8,6 0,14 M566,192 q12,10 0,22" fill="none" stroke={ops} strokeOpacity="0.5" strokeWidth="1.2" />
+      {[0, 1, 2].map((i) => <rect key={i} x={490 + i * 14} y="196" width="11" height="8" fill="#08201f" stroke={ops} strokeOpacity="0.8" />)}
+
+      {/* Saran's Headquarters: tower with a helipad */}
+      <rect x="896" y="470" width="18" height="38" fill="#2a0f22" stroke={hq} strokeWidth="1.4" strokeOpacity="0.95" />
+      <path d="M905,470 V456" stroke={hq} strokeWidth="1.4" fill="none" />
+      <circle cx="938" cy="492" r="14" fill="#2a0f22" stroke={hq} strokeOpacity="0.8" strokeWidth="1.4" />
+      <path d="M933,486 V498 M943,486 V498 M933,492 H943" fill="none" stroke={hq} strokeOpacity="0.9" strokeWidth="1.4" />
+
+      {/* Compass */}
+      <g transform="translate(948 556)" fill="none" stroke="#c8c2ff" strokeOpacity="0.7" strokeWidth="1.2">
+        <circle r="14" />
+        <path d="M0,-12 L4,2 L0,0 L-4,2 Z" fill="#c8c2ff" fillOpacity="0.8" />
+      </g>
+      <text x="948" y="530" className="sc-map-label" textAnchor="middle">N</text>
+    </g>
+  );
+};
 
 export const MapArt = memo(function MapArt({ animate }: { animate: boolean }) {
   return (
@@ -111,6 +182,11 @@ export const MapArt = memo(function MapArt({ animate }: { animate: boolean }) {
           </radialGradient>
         ))}
         <filter id="map-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" /></filter>
+        {DISTRICTS.map((district) => (
+          <clipPath key={`clip-${district.id}`} id={`map-zone-${district.id}`}>
+            <ellipse cx={district.x} cy={district.y + 10} rx="98" ry="70" />
+          </clipPath>
+        ))}
       </defs>
 
       <rect width="1000" height="600" fill="url(#map-sky)" />
@@ -126,17 +202,35 @@ export const MapArt = memo(function MapArt({ animate }: { animate: boolean }) {
 
       <path d="M0,380 C60,400 90,470 140,520 C190,570 300,590 380,600 L0,600 Z" fill="url(#map-sea)" />
       <rect y="588" width="1000" height="12" fill="url(#map-sea)" />
+      <path d="M0,380 C60,400 90,470 140,520 C190,570 300,590 380,600" fill="none" stroke="#bff4ff" strokeOpacity="0.5" strokeWidth="2" />
+      <path d="M0,356 C62,378 100,448 150,496 C206,548 300,570 386,578" fill="none" stroke="#9aa0ff" strokeOpacity="0.4" strokeWidth="1.4" strokeDasharray="3 7" />
       <g className="sc-waves" stroke="#5ad7ff" strokeOpacity="0.35" fill="none" strokeWidth="1.5">
         <path d="M10,500 q14,-8 28,0 t28,0 t28,0" />
         <path d="M60,552 q14,-8 28,0 t28,0 t28,0" />
         <path d="M20,585 q14,-8 28,0 t28,0 t28,0" />
         <path d="M560,594 q14,-6 28,0 t28,0 t28,0 t28,0" />
       </g>
+      <g fill="#0d2a63" stroke="#bff4ff" strokeOpacity="0.7" strokeWidth="1.2">
+        <path d="M24,540 h20 l-4,7 h-12 z" />
+        <path d="M118,568 h18 l-4,6 h-10 z" />
+        <path d="M232,588 h18 l-4,6 h-10 z" />
+      </g>
+      {PARKS.map((park) => (
+        <g key={`${park.x}-${park.y}`}>
+          <ellipse cx={park.x} cy={park.y} rx={park.rx} ry={park.ry} fill="#1fd18b" fillOpacity="0.1" stroke="#1fd18b" strokeOpacity="0.4" strokeWidth="1.2" />
+          {[-0.5, -0.1, 0.3, 0.6].map((offset, index) => <circle key={index} cx={park.x + offset * park.rx} cy={park.y + (index % 2 ? 4 : -4)} r="3.2" fill="#1fd18b" fillOpacity="0.45" />)}
+        </g>
+      ))}
 
-      {DISTRICTS.map((district) => (
+      {DISTRICTS.map((district, index) => (
         <g key={`zone-${district.id}`}>
           <circle cx={district.x} cy={district.y} r="112" fill={`url(#map-glow-${district.id})`} />
-          <ellipse cx={district.x} cy={district.y + 10} rx="98" ry="70" fill="none" stroke={district.accent} strokeOpacity="0.45" strokeDasharray="5 6" />
+          <ellipse cx={district.x} cy={district.y + 10} rx="98" ry="70" fill={district.accent} fillOpacity="0.06" stroke={district.accent} strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="5 6" />
+          <g clipPath={`url(#map-zone-${district.id})`}>
+            {lotsFor(district, index).map((lot, lotIndex) => (
+              <rect key={lotIndex} x={lot.x} y={lot.y} width={lot.w} height={lot.h} rx="1.5" fill={lot.dense ? district.accent : "#0b0a26"} fillOpacity={lot.dense ? 0.2 : 0.9} stroke={district.accent} strokeOpacity="0.35" strokeWidth="0.8" />
+            ))}
+          </g>
         </g>
       ))}
 
@@ -146,25 +240,7 @@ export const MapArt = memo(function MapArt({ animate }: { animate: boolean }) {
       {ROADS.map((road) => <path key={road.id} id={road.id} d={road.d} stroke="#1c1b4a" strokeWidth="11" fill="none" strokeLinecap="round" />)}
       {ROADS.map((road) => <path key={`mid-${road.id}`} d={road.d} stroke="#9aa0ff" strokeOpacity="0.55" strokeWidth="1.4" strokeDasharray="7 9" fill="none" />)}
 
-      <g>
-        <rect x="70" y="448" width="64" height="9" fill="#0d2a63" stroke="#22e6ff" strokeOpacity="0.5" />
-        <rect x="96" y="474" width="52" height="8" fill="#0d2a63" stroke="#22e6ff" strokeOpacity="0.5" />
-        {[[206, 470], [224, 476], [242, 468]].map(([x, y]) => <circle key={x} cx={x} cy={y} r="9" fill="#0d3a73" stroke="#22e6ff" strokeOpacity="0.7" />)}
-        <path d="M150,425 L150,392 L170,392" stroke="#22e6ff" strokeWidth="2" fill="none" strokeOpacity="0.6" />
-        <rect x="660" y="372" width="9" height="30" fill="#2a1c3d" stroke="#ff9a3c" strokeOpacity="0.6" />
-        <rect x="676" y="380" width="7" height="22" fill="#2a1c3d" stroke="#ff9a3c" strokeOpacity="0.6" />
-      </g>
-
-      {DISTRICTS.map((district, index) =>
-        blocksFor(district, index).map((block, blockIndex) => (
-          <g key={`${district.id}-${blockIndex}`}>
-            <rect x={block.x} y={block.y - block.h} width={block.w} height={block.h} fill="#0b0a26" stroke={district.accent} strokeOpacity="0.45" />
-            <polygon points={`${block.x},${block.y - block.h} ${block.x + block.w},${block.y - block.h} ${block.x + block.w + block.d},${block.y - block.h - block.d * 0.6} ${block.x + block.d},${block.y - block.h - block.d * 0.6}`} fill={district.accent} fillOpacity="0.3" />
-            <polygon points={`${block.x + block.w},${block.y - block.h} ${block.x + block.w + block.d},${block.y - block.h - block.d * 0.6} ${block.x + block.w + block.d},${block.y - block.d * 0.6} ${block.x + block.w},${block.y}`} fill="#04041a" />
-            {block.windows.map((window, windowIndex) => <rect key={windowIndex} x={window.x} y={window.y} width="2.4" height="2.4" fill={district.accent} fillOpacity="0.85" />)}
-          </g>
-        )),
-      )}
+      <Landmarks />
 
       {PALMS.map((palm, index) => <Palm key={index} x={palm.x} y={palm.y} />)}
 

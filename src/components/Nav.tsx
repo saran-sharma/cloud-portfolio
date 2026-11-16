@@ -7,6 +7,7 @@ const links = [
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
   { href: "#experience", label: "Experience" },
+  { href: "#certifications", label: "Credentials" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -57,8 +58,8 @@ export const Nav = ({ onExploreCity }: { onExploreCity?: () => void }) => {
         </ul>
         <div className="nav-actions">
           {onExploreCity && (
-            <button type="button" className="nav-city" onClick={onExploreCity} aria-label="Switch to Saran City game mode">
-              <Gamepad2 size={16} aria-hidden="true" /> Saran City
+            <button type="button" className="nav-city" onClick={onExploreCity} aria-label="Explore Saran City" title="Explore Saran City">
+              <Gamepad2 size={16} aria-hidden="true" /> <span>Saran City</span>
             </button>
           )}
           <a href="#contact" className="nav-connect">Let's connect <ArrowUpRight size={15} /></a>

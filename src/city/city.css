@@ -227,12 +227,15 @@
 .sc-dossier div { display: grid; gap: 4px; }
 .sc-dossier strong { font-family: 'Oswald', sans-serif; font-size: 1.5rem; letter-spacing: .05em; }
 .sc-dossier span { font-size: .9375rem; color: #ece6f8; }
-.sc-district-intro { position: fixed; inset: 0; z-index: 70; display: grid; place-content: center; gap: 6px; text-align: center; background: radial-gradient(ellipse at center, rgba(7, 6, 20, .86), #070614 78%); animation: sc-cut 1.8s ease both; }
+.sc-district-intro { position: fixed; inset: 0; z-index: 70; display: grid; place-content: center; gap: 6px; text-align: center; background: #070614; animation: sc-cut 1.8s ease both; }
+/* While the title card plays, the district content is not rendered visually, so titles never overlap. */
+.sc-district.is-intro .sc-district-body, .sc-district.is-intro .sc-unlock { visibility: hidden; }
+.sc-district-body { animation: sc-slide-in .6s cubic-bezier(.2, .7, .2, 1) both; }
 .sc-district-intro span { font-family: 'IBM Plex Mono', monospace; letter-spacing: .5em; color: var(--accent); font-size: 1rem; animation: sc-slide-in .8s both; }
 .sc-district-intro strong { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(2.8rem, 9vw, 7rem); line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: #fff; text-shadow: 0 0 60px var(--accent); animation: sc-title 1.2s .15s both; }
 .sc-district-intro em { font-size: 1.375rem; color: #ffd9ec; animation: sc-fade .8s .7s both; }
 .sc-district-intro small { margin-top: 24px; font-size: .875rem; color: var(--sc-muted); }
-.sc-unlock { position: fixed; z-index: 50; top: 84px; left: 50%; display: grid; justify-items: center; padding: 10px 26px; transform: translateX(-50%); font-family: 'IBM Plex Mono', monospace; letter-spacing: .24em; background: var(--sc-panel-solid); border: 1px solid var(--accent); box-shadow: 0 0 60px color-mix(in srgb, var(--accent) 55%, transparent); animation: sc-unlock 2.6s ease both; }
+.sc-unlock { position: fixed; z-index: 50; top: 76px; right: clamp(12px, 3vw, 32px); display: grid; justify-items: center; padding: 8px 20px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .2em; background: var(--sc-panel-solid); border: 1px solid var(--accent); border-radius: 6px; box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 45%, transparent); animation: sc-unlock 2.6s ease both; pointer-events: none; }
 .sc-unlock span { font-size: .875rem; color: var(--accent); }
 .sc-unlock b { font-family: 'Oswald', sans-serif; font-size: 1.625rem; letter-spacing: .08em; color: #fff; }
 
@@ -418,8 +421,6 @@
 .sc-toast span { font-family: 'IBM Plex Mono', monospace; font-size: .75rem; letter-spacing: .16em; color: var(--sc-orange); }
 .sc-toast strong { font-family: 'Oswald', sans-serif; font-size: 1.125rem; letter-spacing: .05em; text-transform: uppercase; }
 .sc-toast button { width: 36px; height: 36px; display: grid; place-items: center; color: var(--sc-muted); }
-.sc-switch { position: fixed; z-index: 45; left: 50%; bottom: 16px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; font: 600 .9375rem 'DM Sans', sans-serif; letter-spacing: .04em; color: #fff; background: linear-gradient(110deg, #ff2e93, #ff9a3c); border: 0; border-radius: 999px; box-shadow: 0 10px 34px rgba(255, 46, 147, .45); cursor: pointer; white-space: nowrap; }
-.sc-switch:hover { filter: brightness(1.08); }
 
 /* Light-theme safety for portaled dialogs opened in game mode */
 .sc-active .case-study, .sc-active .assistant-dialog { color: var(--sc-text); background: var(--sc-panel-solid); border-color: var(--sc-line); }
@@ -468,7 +469,7 @@
 @keyframes sc-title { from { opacity: 0; transform: scale(.94); letter-spacing: .2em; } to { opacity: 1; transform: none; } }
 @keyframes sc-portrait { from { opacity: 0; clip-path: inset(0 0 100% 0); } to { opacity: 1; clip-path: inset(0); } }
 @keyframes sc-cut { 0% { opacity: 0; } 12% { opacity: 1; } 78% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-@keyframes sc-unlock { 0% { opacity: 0; transform: translate(-50%, -20px) scale(.9); } 12% { opacity: 1; transform: translate(-50%, 0) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -8px); } }
+@keyframes sc-unlock { 0% { opacity: 0; transform: translateY(-12px); } 12% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-6px); } }
 @keyframes sc-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
 @keyframes sc-drift { from { transform: translateX(-10px); } to { transform: translateX(14px); } }
 @keyframes sc-route { to { stroke-dashoffset: -44; } }
@@ -489,10 +490,12 @@
 }
 
 @media (max-width: 900px) {
-  .sc-intro-grid { grid-template-columns: 1fr; align-content: center; padding-top: 88px; padding-bottom: 80px; }
-  .sc-portrait.is-intro { justify-self: center; width: min(100%, 360px); }
+  .sc-intro-grid { grid-template-columns: 1fr; align-content: start; gap: 18px; padding-top: 64px; padding-bottom: 96px; }
+  .sc-portrait.is-intro { order: -1; justify-self: stretch; width: 100%; aspect-ratio: 16 / 10; max-height: 34dvh; }
+  .sc-portrait.is-intro img, .sc-portrait.is-intro.is-art img { object-position: 50% 0%; }
+  .sc-portrait.is-intro figcaption { left: 12px; bottom: 10px; font-size: .8125rem; }
   .sc-intro h1 { font-size: clamp(3rem, 14vw, 5.4rem); }
-  .sc-sun { left: 20%; bottom: 30%; width: 70vw; }
+  .sc-sun { left: 20%; bottom: 30%; width: 70vw; opacity: .45; }
   .sc-profile { grid-template-columns: 1fr; padding-top: 24px; }
   .sc-portrait.is-profile { width: min(100%, 360px); margin: 0 auto; }
   .sc-profile-facts div { grid-template-columns: 1fr; gap: 2px; }
@@ -544,8 +547,8 @@
   .sc-node { width: 31%; padding: 6px 4px; min-height: 50px; }
   .sc-node strong { font-size: .8125rem; }
   .sc-node span { font-size: .75rem; }
-  .sc-switch { left: 12px; bottom: 12px; transform: none; min-height: 44px; padding: 0 14px; }
   .sc-complete { width: auto; }
+  .sc-profile, .sc-map-screen, .sc-mission { padding-bottom: 88px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
