@@ -113,15 +113,16 @@ copied)
   star layers, a moon and a dim skyline. The last sections of the page are fully night. On phones
   the sun and moon are hidden to keep headings clear; the colour shift still happens.
 - **Hero.** The sun sets lower and the copy drifts up faster than the page as you scroll away.
-- **Scroll film** ([ScrollFilm.tsx](src/components/ScrollFilm.tsx), [film-frames.ts](src/components/film-frames.ts)):
-  right after the hero, the opening clip plays *as you scroll*. A tall track pins a full-screen stage while a
-  canvas blends between 36 frames taken from the clip (`public/videos/scroll/frame-001.webp` to `frame-036.webp`,
-  1024px wide, about 1.6 MB in total), with a caption that fades in. Scrolling back rewinds it. The frames are
-  stills extracted from the clip, so this is the same footage and not a new video. They are requested only once
-  the visitor has scrolled about a fifth of the way into the hero (first, middle and last frames first), so
-  opening Recruiter Mode downloads none of them. Reduced motion, Save-Data, phones and any load failure get the
-  single still final frame instead, with the same caption and button. If the clip is ever replaced, re-extract
-  the frames and the home still from it.
+- **Saran Universe card** ([ScrollFilm.tsx](src/components/ScrollFilm.tsx), [film-frames.ts](src/components/film-frames.ts)):
+  a framed cinematic card between Credentials and Contact that invites the visitor into the game ("Explore the
+  work as a world", with an Enter Saran Universe button). As the card passes through the viewport a canvas blends
+  between 36 frames taken from the opening clip, so the clip plays with the scroll and rewinds when you scroll
+  back. The page keeps scrolling normally; nothing is pinned. The frames
+  (`public/videos/scroll/frame-001.webp` to `frame-036.webp`, 1024px wide, about 1.6 MB in total) are stills from
+  the clip, so this is the same footage and not a new video. They are requested only when the card is within
+  about two screens (first, middle and last frames first), so opening Recruiter Mode downloads none of them.
+  Reduced motion, Save-Data, phones and any load failure show the clip's final frame instead, with the same
+  text and button. If the clip is ever replaced, re-extract the frames and the home still from it.
 - **Network backdrop in the hero** ([NetworkBackdrop.tsx](src/components/NetworkBackdrop.tsx),
   [network-scene.ts](src/components/network-scene.ts)): a canvas of slowly drifting nodes, thin cobalt
   and cyan links, hexagon-outlined "service" nodes, a faint golden reflection from the horizon and

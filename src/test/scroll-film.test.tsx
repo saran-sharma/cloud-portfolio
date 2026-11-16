@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ScrollFilm } from "@/components/ScrollFilm";
-import { FILM_FRAME_COUNT, coverRect, filmFrameUrl, frameAt, nearestLoaded, trackProgress } from "@/components/film-frames";
+import { FILM_FRAME_COUNT, coverRect, filmFrameUrl, frameAt, nearestLoaded, passageProgress } from "@/components/film-frames";
 
 const originalMatchMedia = window.matchMedia;
 const originalConnection = (navigator as Navigator & { connection?: unknown }).connection;
@@ -41,13 +41,18 @@ describe("film frame maths", () => {
     expect(tall.w).toBeGreaterThanOrEqual(400);
   });
 
-  it("measures progress through a pinned track", () => {
-    expect(trackProgress(500, 3000, 900)).toBe(0);
-    expect(trackProgress(0, 3000, 900)).toBe(0);
-    expect(trackProgress(-1050, 3000, 900)).toBeCloseTo(0.5);
-    expect(trackProgress(-2100, 3000, 900)).toBe(1);
-    expect(trackProgress(-9000, 3000, 900)).toBe(1);
-    expect(trackProgress(-10, 500, 900)).toBe(0);
+  it("measures progress of a card passing through the viewport", () => {
+    // Below the viewport: not started. Just entering at 85%: 0.
+    expect(passageProgress(900, 500, 900)).toBe(0);
+    expect(passageProgress(765, 500, 900)).toBe(0);
+    // Fully scrolled past (bottom above 40% of the viewport): done.
+    expect(passageProgress(-400, 500, 900)).toBe(1);
+    expect(passageProgress(-9000, 500, 900)).toBe(1);
+    const mid = passageProgress(200, 500, 900);
+    expect(mid).toBeGreaterThan(0.3);
+    expect(mid).toBeLessThan(0.8);
+    // Monotonic as the card moves up.
+    expect(passageProgress(100, 500, 900)).toBeGreaterThan(passageProgress(300, 500, 900));
   });
 
   it("falls back to the closest loaded frame", () => {
@@ -80,7 +85,7 @@ describe("ScrollFilm", () => {
     // Decorative: the hero already announces the portrait and the caption names Saran.
     expect(container.querySelector("img.film-still")).toHaveAttribute("alt", "");
     expect(screen.queryByRole("img", { name: /Illustrated portrait/ })).toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: /Every system has a story/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: /Explore the work as a world/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Enter Saran Universe/ }));
     expect(onExplore).toHaveBeenCalledTimes(1);
   });

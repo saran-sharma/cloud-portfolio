@@ -2,17 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { useReducedMotion } from "@/city/hooks/use-reduced-motion";
 import { gameIntroVideo, shouldPlayIntroVideo } from "@/city/videos";
-import { FILM_FRAME_COUNT, coverRect, filmFrameUrl, frameAt, nearestLoaded, trackProgress } from "@/components/film-frames";
+import { FILM_FRAME_COUNT, coverRect, filmFrameUrl, frameAt, nearestLoaded, passageProgress } from "@/components/film-frames";
 
-// Negative bottom margin: frames start loading only after the visitor has scrolled a little way into the hero,
-// so opening Recruiter Mode never downloads them. The first, middle and last frames arrive first.
-const WARM_UP_MARGIN = "0px 0px -22% 0px";
+// The card sits far down the page, so frames are requested only when it is within about two screens. Opening
+// Recruiter Mode downloads none of them. The first, middle and last frames arrive first.
+const WARM_UP_MARGIN = "1800px 0px";
 const CONCURRENCY = 6;
 
 /**
- * The opening clip, played by scrolling. A tall track pins a full-screen stage while a canvas blends between
- * 36 frames taken from the clip. Frames download only when the section is about to be reached, never with the
- * page. Reduced motion, Save-Data and phones get the still final frame instead and download no frames.
+ * A framed cinematic card near the end of the page that invites the visitor into Saran Universe. As it passes
+ * through the viewport a canvas blends between 36 frames taken from the opening clip, so the clip plays with the
+ * scroll while the page keeps moving normally (nothing is pinned). Reduced motion, Save-Data and phones get the
+ * still final frame instead and download no frames.
  */
 export const ScrollFilm = ({ onExploreCity }: { onExploreCity?: () => void }) => {
   const reduced = useReducedMotion();
@@ -25,7 +26,8 @@ export const ScrollFilm = ({ onExploreCity }: { onExploreCity?: () => void }) =>
   useEffect(() => {
     const section = track.current;
     const element = canvas.current;
-    if (!live || !section || !element) return;
+    const frameBox = element?.parentElement;
+    if (!live || !section || !element || !frameBox) return;
     let ctx: CanvasRenderingContext2D | null = null;
     try { ctx = element.getContext("2d"); } catch { ctx = null; }
     if (!ctx) { setFailed(true); return; }
@@ -75,9 +77,8 @@ export const ScrollFilm = ({ onExploreCity }: { onExploreCity?: () => void }) =>
     };
 
     const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      progress = trackProgress(rect.top, rect.height, window.innerHeight);
-      section.style.setProperty("--tp", progress.toFixed(3));
+      const rect = frameBox.getBoundingClientRect();
+      progress = passageProgress(rect.top, rect.height, window.innerHeight);
       schedule();
     };
 
@@ -129,21 +130,20 @@ export const ScrollFilm = ({ onExploreCity }: { onExploreCity?: () => void }) =>
       resize?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      section.style.removeProperty("--tp");
     };
   }, [live]);
 
   return (
-    <section ref={track} id="film" className={`film-track ${live ? "is-live" : "is-static"}`} aria-label="Saran Universe film">
-      <div className="film-stage">
+    <section ref={track} id="film" className={`film-section section-space page-shell ${live ? "is-live" : "is-static"}`} aria-label="Saran Universe">
+      <div className="film-card">
         {live ? <canvas ref={canvas} className="film-canvas" aria-hidden="true" /> : (
           <img className="film-still" src={gameIntroVideo.home} alt="" width={1280} height={720} loading="lazy" decoding="async" draggable={false} />
         )}
         <div className="film-shade" aria-hidden="true" />
         <div className="film-caption">
-          <p className="eyebrow">Saran Universe</p>
-          <h2>Every system has a story. <em>Explore mine.</em></h2>
-          <p className="film-meta">Saran S. <span aria-hidden="true">&middot;</span> Data Platform Engineer <span aria-hidden="true">&middot;</span> Chennai, India</p>
+          <p className="eyebrow">Beyond the resume</p>
+          <h2>Explore the work <em>as a world.</em></h2>
+          <p className="film-copy">Saran Universe turns the same projects and case studies into districts, missions and a map you can walk around.</p>
           {onExploreCity && (
             <button type="button" className="action-button action-primary" onClick={onExploreCity}>
               Enter Saran Universe <ArrowRight size={18} aria-hidden="true" />

@@ -26,13 +26,13 @@ const Index = ({ onExploreCity }: { onExploreCity?: () => void }) => {
       <Nav onExploreCity={onExploreCity} />
       <main id="main-content" tabIndex={-1}>
         <Hero />
-        <ScrollFilm onExploreCity={onExploreCity} />
         <About />
         <TechMarquee />
         <Projects />
         <Skills />
         <Experience />
         <Certifications />
+        <ScrollFilm onExploreCity={onExploreCity} />
         <Contact />
       </main>
       <Footer />

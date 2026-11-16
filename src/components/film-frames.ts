@@ -23,10 +23,15 @@ export function coverRect(srcW: number, srcH: number, dstW: number, dstH: number
   return { x: (dstW - w) * posX, y: (dstH - h) * posY, w, h };
 }
 
-/** Scroll progress through a pinned track: 0 when its top reaches the top of the viewport, 1 when it unpins. */
-export function trackProgress(top: number, trackHeight: number, viewportHeight: number) {
-  const distance = trackHeight - viewportHeight;
-  return distance > 0 ? clamp01(-top / distance) : 0;
+/**
+ * Progress of a card passing through the viewport: 0 as its top reaches 85% of the viewport height (just
+ * entering), 1 once its bottom has risen to 40% (almost gone). The page keeps scrolling normally throughout.
+ */
+export function passageProgress(top: number, height: number, viewportHeight: number) {
+  const start = viewportHeight * 0.85;
+  const end = viewportHeight * 0.4;
+  const span = height + start - end;
+  return span > 0 ? clamp01((start - top) / span) : 0;
 }
 
 /** The closest index to `wanted` that is in `loaded`, or -1 when nothing has loaded yet. */
