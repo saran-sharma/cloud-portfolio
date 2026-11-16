@@ -4,7 +4,8 @@ import { Reveal } from "@/components/Reveal";
 export const About = () => (
   <section id="about" className="section-space page-shell">
     <div className="about-layout">
-      <Reveal className="about-intro">
+      <Reveal progress className="about-intro">
+        <span className="section-index" aria-hidden="true">01</span>
         <p className="eyebrow">About me</p>
         <h2 className="about-title">Platforms that are easy to run, <em>and easy to trust.</em></h2>
         <ol className="journey" aria-label="Background">

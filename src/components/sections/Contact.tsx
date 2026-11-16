@@ -4,6 +4,7 @@ import { ArrowUpRight, Download, Github, Linkedin, Loader2, Mail, MapPin, Phone,
 import { toast } from "sonner";
 import { portfolio } from "@/data/portfolio";
 import { buildMailto, isEmailJsConfigured, openMailto, type ContactDraft } from "@/lib/contact";
+import { Reveal } from "@/components/Reveal";
 import { trackResumeDownload } from "@/lib/analytics";
 
 const SEND_TIMEOUT_MS = 15000;
@@ -95,12 +96,15 @@ export const Contact = () => {
   return (
     <section id="contact" className="section-space contact-section">
       <div className="page-shell">
-        <p className="eyebrow">Contact</p>
-        <div className="contact-heading">
-          <h2>Let's talk about <span className="text-gold">what you're building.</span></h2>
-          <p>I'm open to relevant professional opportunities and engineering collaborations. If you're working on data platforms, cloud automation or AI-enabled operations, I'd like to hear about it.</p>
-        </div>
-        <div className="contact-layout">
+        <Reveal progress className="contact-intro">
+          <span className="section-index" aria-hidden="true">06</span>
+          <p className="eyebrow">Contact</p>
+          <div className="contact-heading">
+            <h2>Let's talk about <span className="text-gold">what you're building.</span></h2>
+            <p>I'm open to relevant professional opportunities and engineering collaborations. If you're working on data platforms, cloud automation or AI-enabled operations, I'd like to hear about it.</p>
+          </div>
+        </Reveal>
+        <Reveal className="contact-layout" delay={120}>
           <div>
             <a className="contact-email" href={`mailto:${p.email}`}>{p.email}<ArrowUpRight size={22} aria-hidden="true" /></a>
             <div className="contact-links">
@@ -130,7 +134,7 @@ export const Contact = () => {
             </div>
             {status?.kind === "error" && <p className="form-note">Or <a href={mailto}>send it from your email app</a>. Your message is kept in the form.</p>}
           </form>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

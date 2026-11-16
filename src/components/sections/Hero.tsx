@@ -4,6 +4,7 @@ import { portfolio } from "@/data/portfolio";
 import { usePointerTilt } from "@/hooks/use-pointer-tilt";
 import { trackResumeDownload } from "@/lib/analytics";
 import { CitySkyline } from "@/city/components/CitySkyline";
+import { NetworkBackdrop } from "@/components/NetworkBackdrop";
 import { useReducedMotion } from "@/city/hooks/use-reduced-motion";
 import { useSkyParallax } from "@/city/hooks/use-sky-parallax";
 import { characterAlt, characterImage, hasCharacterArt } from "@/city/character";
@@ -20,8 +21,9 @@ export const Hero = () => {
   const showSkyVideo = recruiterIntroVideo.hasVideo && !videoFailed && !reduced && shouldPlayIntroVideo({ allowSmallViewport: true });
 
   return (
-    <section id="top" className="hero" ref={sky}>
+    <section id="top" className="hero" ref={sky} data-scroll="hero">
       <div className="hero-sky" aria-hidden="true">
+        {!showSkyVideo && <NetworkBackdrop />}
         {showSkyVideo && (
           <video
             className="hero-sky-video"

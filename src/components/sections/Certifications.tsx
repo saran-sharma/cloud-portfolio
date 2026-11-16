@@ -1,11 +1,11 @@
 import { GraduationCap } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeader } from "@/components/SectionHeader";
 
 export const Certifications = () => (
   <section id="certifications" className="section-space page-shell credentials-section">
-    <p className="eyebrow">Credentials</p>
-    <h2>Certifications <em>and study.</em></h2>
+    <SectionHeader eyebrow="Credentials" title={<>Certifications <em>and study.</em></>} index="05" />
     <div className="credentials-grid">
       <Reveal>
         <h3 className="credentials-heading">Certifications</h3>

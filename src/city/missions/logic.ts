@@ -1,5 +1,5 @@
 /**
- * Pure logic and synthetic data for the Saran City missions.
+ * Pure logic and synthetic data for the Saran Universe missions.
  * Everything here is invented for demonstration. No real tenant, resource name,
  * endpoint, identity or figure from any employer or client is used.
  */

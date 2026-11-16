@@ -7,7 +7,7 @@ const icons = [Database, ListChecks, Code2, Cloud, GitBranch, ShieldCheck, Bot, 
 
 export const Skills = () => (
   <section id="skills" className="section-space page-shell">
-    <SectionHeader eyebrow="Toolkit" title={<>The tools I use, <em>grouped by the job.</em></>} subtitle="Each group links to the work where I've used it." />
+    <SectionHeader eyebrow="Toolkit" title={<>The tools I use, <em>grouped by the job.</em></>} subtitle="Each group links to the work where I've used it." index="03" />
     <div className="skills-index">
       {portfolio.skills.map((group, index) => {
         const Icon = icons[index];
@@ -17,7 +17,7 @@ export const Skills = () => (
               <Icon size={22} strokeWidth={1.4} aria-hidden="true" />
               <div><h3>{group.category}</h3><p>{group.purpose}</p></div>
             </div>
-            <ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{group.items.map((item, itemIndex) => <li key={item} style={{ ["--i" as string]: itemIndex }}>{item}</li>)}</ul>
             <a href={`#work-${group.projectId}`} className="text-link">Related work <ArrowUpRight size={15} /></a>
           </Reveal>
         );

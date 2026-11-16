@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 type Theme = "dark" | "light";
 const ThemeCtx = createContext<{ theme: Theme; toggle: () => void }>({ theme: "dark", toggle: () => {} });
 
-// The portfolio shares the single Saran City look, so the theme is always dark and not user-switchable.
+// The portfolio shares the single Saran Universe look, so the theme is always dark and not user-switchable.
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme] = useState<Theme>("dark");
 

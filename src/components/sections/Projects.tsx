@@ -44,7 +44,7 @@ export const OpenCaseStudy = ({ project, children }: { project: Project; childre
 };
 
 const FeaturedProject = ({ project, index }: { project: Project; index: number }) => (
-  <Reveal className={`feature ${index === 0 ? "is-lead" : ""} ${index % 2 === 1 ? "is-flipped" : ""}`}>
+  <Reveal progress className={`feature ${index === 0 ? "is-lead" : ""} ${index % 2 === 1 ? "is-flipped" : ""}`}>
     <article id={`work-${project.id}`} className="feature-body">
       <p className="feature-meta"><span>{String(index + 1).padStart(2, "0")}</span> {project.category}</p>
       <h3>{project.title}</h3>
@@ -85,7 +85,7 @@ export const Projects = () => {
   return (
     <section id="projects" className="section-space projects-section">
       <div className="page-shell">
-        <SectionHeader eyebrow="Selected work" title={<>Work I can <em>explain end to end.</em></>} subtitle="Six projects I can walk through in detail, plus three more. Details are anonymized." />
+        <SectionHeader eyebrow="Selected work" title={<>Work I can <em>explain end to end.</em></>} subtitle="Six projects I can walk through in detail, plus three more. Details are anonymized." index="02" />
         <div className="feature-list">
           {featured.map((project, index) => <FeaturedProject key={project.id} project={project} index={index} />)}
         </div>

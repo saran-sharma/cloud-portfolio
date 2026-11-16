@@ -32,7 +32,7 @@ const RestorePosition = () => {
   return null;
 };
 
-/** Recruiter Mode is the conventional portfolio in the Saran City look, with a way back into the game. */
+/** Recruiter Mode is the conventional portfolio in the Saran Universe look, with a way back into the game. */
 export const RecruiterMode = () => {
   const { setMode } = useCity();
   return (

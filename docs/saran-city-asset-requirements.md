@@ -1,4 +1,4 @@
-# Saran City: world map and environment asset requirements
+# Saran Universe: world map and environment asset requirements
 
 Status: **assets are not supplied yet.** The current map (`src/city/components/MapArt.tsx`) is a
 flat, code-drawn stylized map. It is not a realistic coastal city and is not meant to pass as one.

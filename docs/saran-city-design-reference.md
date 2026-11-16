@@ -1,4 +1,4 @@
-# Saran City: design reference study
+# Saran Universe: design reference study
 
 First deliverable of the reference-led redesign. **Nothing in the interface has been redesigned
 yet.** This study is for review before any visual work starts.
@@ -41,7 +41,7 @@ action at a location; there is persistent progress; a map; an escape hatch for s
 
 **Adapt, do not copy:** the driving mechanic is out. Keep the ideas of places as content,
 one-action interaction, achievements, a map, and a visible way out. Three.js is not justified
-for Saran City (click-to-explore, no physics), so none is proposed.
+for Saran Universe (click-to-explore, no physics), so none is proposed.
 
 ## 3. Robby Leonardi
 **Not inspected (fetch failed).** The brief describes it as a gamified resume where

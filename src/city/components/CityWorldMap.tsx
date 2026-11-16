@@ -41,7 +41,7 @@ export const CityWorldMap = () => {
   return (
     <section className="sc-map-screen" aria-labelledby="sc-map-title">
       <header className="sc-map-head">
-        <p className="sc-kicker">SARAN CITY</p>
+        <p className="sc-kicker">SARAN UNIVERSE</p>
         <h1 id="sc-map-title">Choose a district</h1>
         <p>Six districts, each built around real engineering work. Select one to explore it. {discovered} of {DISTRICTS.length} discovered.</p>
       </header>

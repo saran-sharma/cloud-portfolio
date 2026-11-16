@@ -1,5 +1,8 @@
 import "@testing-library/jest-dom";
 
+// jsdom has no canvas. Return null instead of logging "not implemented" for every canvas.
+HTMLCanvasElement.prototype.getContext = (() => null) as unknown as typeof HTMLCanvasElement.prototype.getContext;
+
 // Node's native localStorage can shadow jsdom's storage in newer runtimes.
 const values = new Map<string, string>();
 Object.defineProperty(window, "localStorage", {

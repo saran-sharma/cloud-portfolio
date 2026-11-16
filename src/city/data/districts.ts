@@ -83,7 +83,7 @@ export const DISTRICTS: District[] = [
     id: "headquarters",
     number: "06",
     name: "Saran's Headquarters",
-    tagline: "The engineer behind the city.",
+    tagline: "The engineer behind the universe.",
     intro: "A quiet penthouse above the skyline: the career, the credentials, the way of working and a way to get in touch.",
     accent: "#ff6b6b",
     x: 860,

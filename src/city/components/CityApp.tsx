@@ -66,7 +66,7 @@ const Shell = () => {
   return mode === "recruiter" ? <RecruiterMode /> : <GameShell />;
 };
 
-/** Saran City: the game layer. Recruiter Mode renders the conventional portfolio. */
+/** Saran Universe: the game layer. Recruiter Mode renders the conventional portfolio. */
 export const CityApp = () => (
   <CityProvider>
     <Shell />

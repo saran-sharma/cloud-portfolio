@@ -1,269 +1,290 @@
-# cloud-portfolio
+# Saran Universe
 
-Personal portfolio for Saran S., Data Platform Engineer | AI & Cloud, based in
-Chennai, India. React, TypeScript, Vite and Tailwind CSS, deployed as a static
-site.
+> *Every system has a story. Explore mine.*
 
-## What is on the page
+**Live:** [saran-cloud-portfolio.vercel.app](https://saran-cloud-portfolio.vercel.app/)
 
-- **Hero:** a first-person headline beside the existing portrait
-  ([profilepic.jpeg](src/assets/profilepic.jpeg), used as supplied). On mobile the
-  order is headline, photo, introduction.
-- **About:** first-person introduction, how I work, and a short background
-  timeline taken from the resume facts.
-- **Selected work:** six featured projects, each with its own diagram, and three
-  more. Every project opens a case study dialog.
-- **Toolkit, experience, credentials and contact.** The experience section lists
-  responsibilities by theme. No dates, titles or metrics are made up.
+Most portfolios are a list of buzzwords with a headshot. This one is a small universe you can
+walk around in.
 
-Content lives in [src/data/portfolio.ts](src/data/portfolio.ts). Project visuals
-are in [ProjectVisual.tsx](src/components/ProjectVisual.tsx): a medallion pipeline,
-an onboarding and promotion flow, a reporting architecture, a vertical
-investigation flow, a storage decision tree, a PIM swimlane, a layered data
-platform and an MCP sequence diagram. They are native
-HTML and CSS, so they stay readable on small screens.
-GymFlow AI has no diagram because there is nothing to show beyond its stack.
+I'm **Saran S.**, a Data Platform Engineer (AI & Cloud) from Chennai, India. I build data
+platforms on Azure, Databricks and Microsoft Fabric, and I automate the parts that slow them
+down. This site is where that work lives, told two ways:
 
-## Authenticity rules
+| | **Saran Universe** (game mode) | **Recruiter Mode** |
+| --- | --- | --- |
+| **For** | Curious people with five minutes | People with a shortlist and a deadline |
+| **Feels like** | An open-world intro, a map, districts, missions | A clean, fast, conventional portfolio |
+| **You get** | XP, badges, interactive engineering missions | Experience, skills, case studies, resume, contact form |
+| **Get there** | Default. Open the site | Header button, intro menu, or `/?mode=recruiter` |
 
-- Case studies state what the work was and what I did. Outcomes appear only where
-  the resume supports them.
-- No screenshots, metrics, savings or production claims are invented.
+Same content, same palette, same character. Only the pace changes. You can hop between the two
+at any time and the site remembers where you were.
+
+---
+
+## A quick tour
+
+1. **The opening.** A short cinematic, then a menu: *Start your journey*, *Enter Saran
+   Universe*, *Recruiter Mode*, *Download resume*. Skip it any time. Replay it if you liked it.
+2. **The player profile.** Meet the protagonist (that's me, illustrated).
+3. **The map.** Six districts, each home to real portfolio projects:
+   - **Data Docks:** *Where data comes ashore.*
+   - **Cloud Heights:** *The platform above the platform.*
+   - **Automation Works:** *If it repeats, it ships itself.*
+   - **Neon AI Labs:** *Intelligence, with a human in the loop.*
+   - **Operations HQ:** *See the platform. Then ask why.*
+   - **Saran's Headquarters:** *The engineer behind the universe.* The dossier, resume and contact.
+4. **The missions.** Six small simulations (a data pipeline, a cost review, an incident
+   investigation, a storage assessment, a PIM workflow, an MCP request). They use made-up,
+   synthetic data only. They show *how I think*, not anything from a client.
+5. **Case studies.** Every project opens a write-up of what the work was and what I did.
+
+XP and badges only measure how much of the site you've explored. They are not a skill rating.
+(Please don't read "Level 7" as an assessment of my Spark.)
+
+---
+
+## The honesty clause
+
+Portfolios tend to inflate. This one has rules:
+
+- Case studies say what the work was and what **I** did. Outcomes appear only where my resume
+  supports them.
+- No invented screenshots, metrics, savings or production claims.
 - Internal names, identifiers, tenants, endpoints and financial data are left out.
-- What still needs input is tracked in [docs/content-todo.md](docs/content-todo.md),
-  together with the resume mismatches. That file is not shown on the website.
+- Open questions live in [docs/content-todo.md](docs/content-todo.md) (not shown on the site).
+  Known one: my resume still says "Senior Cloud & DevOps Engineer" while the site says
+  "Data Platform Engineer | AI & Cloud". `public/resume.pdf` is the older resume. Both are my
+  call to make.
 
-## Design
+Content lives in [src/data/portfolio.ts](src/data/portfolio.ts). Project diagrams are native HTML
+and CSS in [ProjectVisual.tsx](src/components/ProjectVisual.tsx), so they stay readable on a
+phone.
 
-Saran City palette: deep navy, sunset magenta and orange, electric cyan accents. It
-is shared by the game and Recruiter Mode, with a single dark theme. Oswald for
-headlines, DM Sans for body text and IBM Plex Mono for small technical labels. Body
-text is 17px, nothing renders below 13px, and the type scale is defined in
-[src/index.css](src/index.css). Animation is limited to a small reveal and respects
-`prefers-reduced-motion`.
+---
 
-## Interactive portrait
+## The look
 
-The hero photograph tilts toward the cursor (about 3.5 degrees at most), with a
-warm spotlight that follows the pointer. It is built from local React pointer
-events and CSS custom properties, with no animation library.
+Deep navy sky, sunset magenta and orange, electric cyan for anything you can act on. Oswald for
+headlines, DM Sans for reading, IBM Plex Mono for small technical labels. One dark theme, shared
+by both modes, so switching never feels like changing websites. Colour tokens come from
+[city.css](src/city/city.css); Recruiter Mode restyles on top in
+[recruiter.css](src/city/recruiter.css) without touching the content components.
 
-- [use-pointer-tilt.ts](src/hooks/use-pointer-tilt.ts) eases the pointer position
-  inside one `requestAnimationFrame` loop that stops when everything has settled,
-  so the portrait glides to the cursor, glides back on leave, and idles at zero cost.
-- The pointer is measured against the stable outer container, not the tilted
-  image, so the effect cannot feed back on itself. The photo scales up slightly
-  with the tilt so its edges never show.
-- The JPEG is flattened, so it moves as one plane. Depth comes from separate
-  layers on top of it: the spotlight (follows the cursor), a soft ambient glow
-  (moves the opposite way, more slowly), a small ruler and the name plate
-  (deeper parallax). The photograph itself is not modified or cut out.
-- It only runs for a fine, hovering pointer at 768px or wider and without
-  `prefers-reduced-motion`. Touch, small screens and reduced-motion users get a
-  static portrait with a fixed warm light. Nothing intercepts scrolling or clicks.
+Everything is original art direction in code. The skyline is SVG, the sun is CSS, and the map is
+a flat, hand-drawn city plan. It is deliberately not a photorealistic coastline (see
+[docs/saran-city-asset-requirements.md](docs/saran-city-asset-requirements.md) for what would
+take it there).
 
-## Saran City (game mode) and Recruiter Mode
+### The protagonist
 
-The site opens as **Saran City: The Engineering Chronicles**, an original
-open-world style layer over the same portfolio content. The classic portfolio is
-**Recruiter Mode**. It is always one click away (top bar, intro menu and a floating
-button) and `/?mode=recruiter` opens it directly.
+The stylized character in [src/assets/saran-character.png](src/assets/saran-character.png) was
+supplied by me and is used unmodified. It appears on the opening screen, player profile, map
+marker, district dossier and the Recruiter Mode hero, all through one module,
+[character.ts](src/city/character.ts). Crops are tuned separately for big portraits and small
+circular avatars.
 
-- **Flow:** start screen, player profile, city map, six districts, engineering
-  missions, case studies, achievements, and contact in Recruiter Mode.
-- **Districts:** Data Docks, Cloud Heights, Automation Works, Neon AI Labs,
-  Operations HQ and Saran's Headquarters. Every portfolio project sits in one.
-- **Missions:** six interactive simulations (data pipeline, cost review, incident
-  investigation, storage assessment, PIM workflow, MCP request) plus the HQ dossier.
-  They use fictional, synthetic data only and are lazy-loaded.
-- **Progress:** XP, badges and visited districts are stored in `localStorage`
-  (`saran-city:progress:v1`). Progress can be reset from the progress panel. XP only
-  measures how much of the site has been explored. It is not a skill rating.
-- **Accessibility:** keyboard operable, Escape goes back, `prefers-reduced-motion`
-  disables the cinematic and map zoom, a list of districts replaces the map
-  on narrow screens, and tap targets are at least 44px.
-- **Recruiter Mode look:** the portfolio now uses the Saran City identity: the same
-  navy and sunset palette, Oswald display type, button shapes, skyline, and the same
-  character module. Colour tokens come from [city.css](src/city/city.css) and the
-  structural restyle is in [recruiter.css](src/city/recruiter.css), so the content
-  components are unchanged. The light theme and its toggle were removed so there is
-  one visual identity. The switch back to the game is a button in the header on every
-  screen size (icon only on small screens), so nothing floats over the page. On phones the
-  SaranAI launcher also sits in the header.
-- **Code:** everything lives in [src/city](src/city). No new dependencies.
-  [CityApp.tsx](src/city/components/CityApp.tsx) switches between the game and the
-  portfolio ([Index.tsx](src/pages/Index.tsx)).
-- **Screenshots:** [docs/screenshots](docs/screenshots). `before/` and `after/` show
-  the Recruiter Mode change.
+The original photo, [profilepic.jpeg](src/assets/profilepic.jpeg), is never touched and acts as
+the fallback: delete the character file and every screen quietly falls back to the photo.
 
-### Character artwork status
+Honest caveat: the source image is 768px square, so large hero portraits are upscaled. A ~1600px
+export would look sharper.
 
-- **Supplied and integrated.** The owner-supplied stylized character
-  `src/assets/saran-character.png` (768x768) is used through
-  [character.ts](src/city/character.ts) on the opening screen, player profile, world-map
-  marker, district dossier and the Recruiter Mode hero. It was supplied externally, not
-  generated in this repository, and is used unmodified.
-- The original photograph `src/assets/profilepic.jpeg` is unchanged and stays the
-  fallback: if the character file is removed, every screen falls back to the photo.
-- Crops are tuned separately for the large portraits (`object-position`) and the small
-  circular avatars (`background-size` and `background-position`) under the `.is-art`
-  rules in [city.css](src/city/city.css) and [recruiter.css](src/city/recruiter.css).
-- The source file is 768px square, so it is upscaled in the large hero portraits. A
-  higher-resolution export (about 1600px) would look sharper.
+### Motion (all code, no fake video)
 
-### Motion
+**Saran Universe**
 
-All motion is code-based (CSS and a small requestAnimationFrame hook); no video file ships
-today and nothing simulates one with filters.
+- Character entrance, slow idle float, faint breathing, an occasional rim-light sheen, and a brief
+  HUD lock-on frame during the opening.
+- The sun and skyline drift against your pointer
+  ([use-sky-parallax.ts](src/city/hooks/use-sky-parallax.ts)), and skyline windows twinkle.
+- **Replay intro** re-runs the entrance on demand (the video clip when allowed, otherwise the code
+  intro). It never replays by itself.
 
-- Character entrance, then a slow idle float and faint breathing scale, an occasional
-  rim-light sheen and a brief HUD lock-on frame during the opening.
-- **Replay intro** on the opening menu re-runs the entrance; it never replays on its own.
-- Sun and skyline drift against the pointer, driven by
-  [use-sky-parallax.ts](src/city/hooks/use-sky-parallax.ts) from local pointer events only.
-- Skyline windows twinkle ([CitySkyline.tsx](src/city/components/CitySkyline.tsx)).
-- Screen and district transitions, plus hover states on cards, chips and tiles.
-- `prefers-reduced-motion` turns the idle, twinkle and parallax motion off. Parallax also
-  stays off for touch devices and screens under 768px.
+**Recruiter Mode scroll experience** (inspired by the cinematic scroll pacing of
+[Rockstar's GTA VI page](https://www.rockstargames.com/VI) and the playful world of
+[Bruno Simon's portfolio](https://bruno-simon.com/); patterns re-implemented from scratch, nothing
+copied)
 
-#### Optional intro videos (not supplied yet)
+- **A day in one scroll.** The hero is a sunrise: the sun climbs from behind the skyline on load.
+  As you scroll, a fixed backdrop ([ScrollSky.tsx](src/components/ScrollSky.tsx)) moves through
+  morning and daylight (a sun arcs across the right margin), then dusk, and ends in night with two
+  star layers, a moon and a dim skyline. The last sections of the page are fully night. On phones
+  the sun and moon are hidden to keep headings clear; the colour shift still happens.
+- **Hero.** The sun sets lower and the copy drifts up faster than the page as you scroll away.
+- **Network backdrop in the hero** ([NetworkBackdrop.tsx](src/components/NetworkBackdrop.tsx),
+  [network-scene.ts](src/components/network-scene.ts)): a canvas of slowly drifting nodes, thin cobalt
+  and cyan links, hexagon-outlined "service" nodes, a faint golden reflection from the horizon and
+  small data particles that slide along the links. It is deliberately thin where the headline, copy and
+  buttons sit, fades out toward the skyline, and runs at about 24 fps. It pauses when the hero is
+  off screen or the tab is hidden, and with `prefers-reduced-motion` draws one still frame. It is
+  code, not a video, and it is replaced by the optional Recruiter video clip if one is ever added.
+- **Progress bar** across the top of the page, and **chapter numbers** (01 to 06) that drift behind
+  each heading while the section rule draws itself in.
+- **Rise-in reveals.** Panels fade up, their contents follow one after another, and project
+  diagrams slide in from the side with a light parallax.
+- **Technology ribbon** ([TechMarquee.tsx](src/components/TechMarquee.tsx)): two rows slide in
+  opposite directions as it scrolls past. Names come from the Toolkit data, so nothing is invented.
+- **Experience timeline** whose line fills and nodes light up as you reach them, **Toolkit chips**
+  that pop in, and a **cursor spotlight** on panels (mouse only).
+- All of it is driven by CSS variables written by
+  [use-scroll-effects.ts](src/hooks/use-scroll-effects.ts), one `requestAnimationFrame`-throttled
+  scroll listener that writes only to small subtrees and animates only `transform` and `opacity`.
+  In a headless Edge run, scrolling the full page held a 17ms median frame time at 1440px.
 
-[videos.ts](src/city/videos.ts) picks up these files if they are added; with none present
-the existing code-based intro and hero are used unchanged.
+**Everywhere:** `prefers-reduced-motion` turns the idle, twinkle, parallax, cinematic and all scroll
+effects off (the page renders static, the ribbon wraps, the progress bar is hidden). Touch devices
+and screens under 768px skip the pointer effects too.
 
-| Mode | Path | Length | Poster / fallback |
-| --- | --- | --- | --- |
-| Saran City | `src/assets/videos/saran-city-intro.webm` (+ optional `.mp4`) | 5-7 s, played once | `saran-character.png` |
-| Recruiter Mode | `src/assets/videos/recruiter-tech-intro.webm` (+ optional `.mp4`) | 2-3 s, muted background | existing hero sky |
+### Intro videos
 
-Videos are muted, `preload="none"`, and only mounted when their mode opens. They are
-skipped for `prefers-reduced-motion`, Save-Data, and (Saran City only) viewports under
-768px, and any load error falls back to the existing artwork. The files must be generated
-externally; no placeholder video is included.
+**Saran Universe opening (included).** [public/videos/saran-universe-intro.mp4](public/videos/saran-universe-intro.mp4)
+is a character entrance clip I generated externally with the owner-supplied character art as the
+reference (1280x720, about 8 s, silent use only). It plays as a full-bleed layer *behind* the game
+interface, cropped with `object-fit: cover` so there are no black side areas, then dissolves into the
+title and menu. Its poster, `saran-universe-intro-poster.jpg`, is simply the clip's first frame.
 
-Known limitations: there is no sound; the player is a portrait, not a full-body
-avatar; the missions are simulations of the kind of work done, not real client
-systems; the mini-map is shown on screens 1600px or wider. The world map is a flat,
-code-drawn city plan (coastline, parks, one landmark cluster per district). It is not a
-realistic coastal city; the assets that would get it there are listed in
-[docs/saran-city-asset-requirements.md](docs/saran-city-asset-requirements.md). The job
-title on the resume ("Senior Cloud & DevOps Engineer") still differs from the site
-("Data Platform Engineer | AI & Cloud"), and `public/resume.pdf` is the older resume. Both
-are decisions for the owner and are listed in [docs/content-todo.md](docs/content-todo.md).
+- Muted, `playsInline`, `autoplay`, never with sound. It is requested only when the game opening
+  mounts, so Recruiter Mode never downloads it (the file is in `public/`, never bundled).
+- **Skip intro** (button, or any key) and **Replay intro** (on the menu). It plays once on a first
+  visit and is remembered as seen once playback actually starts, so reloads and later navigation do
+  not replay it.
+- **Fallback is the existing code-based intro** (sunset sky, skyline and the animated character art)
+  whenever the clip is not wanted or cannot play: `prefers-reduced-motion` (fully static, no Skip or
+  Replay), Save-Data, screens under 768px, a missing or broken file, a browser that refuses
+  autoplay, or playback that has not started after 5 s.
+- Reserves its space (`width`/`height` plus an absolutely positioned layer), so it causes no layout
+  shift.
 
-## Portfolio guide
+**Home screen.** On screens 901px and wider, the intro does not cut to a different picture. The clip's own
+final frame (`public/videos/saran-universe-home.jpg`, a still extracted from the clip) is the home screen: the
+title and menu fade in over it behind a left-hand scrim, and the clip dissolves into the identical still (mean
+pixel difference about 2 to 4 out of 255 in a real-browser handoff test). The sunset sky, black bar and the
+second portrait card are not used there. The same home is shown to returning visitors, with reduced motion and
+with Save-Data, using only the 150 KB still and no video download. The clip and the still share one crop
+(`--sc-film-x` in [city.css](src/city/city.css)) so the face stays clear of the title on 4:3 and 16:10 screens as
+well as 16:9. Under 901px, or if the still fails to load, the original sunset and portrait-card layout is used.
+If the clip is ever replaced, re-extract `saran-universe-home.jpg` from its exact last frame.
 
-The SaranAI button opens a local, rule-based guide. It is not a generative AI
-service, makes no network requests and answers only from the public data above.
+**Recruiter Mode background clip (optional, not included).** If
+`src/assets/videos/recruiter-tech-intro.webm` or `.mp4` is added, [videos.ts](src/city/videos.ts)
+picks it up for the hero background (muted, `preload="none"`, skipped for reduced motion and
+Save-Data). With none present, nothing changes.
 
-## Run and validate
+---
+
+## Run it yourself
 
 ```sh
 npm ci
-npm run dev
+npm run dev        # http://localhost:5173
 npm run test
 npx tsc --noEmit -p tsconfig.app.json
 npm run lint
 npm run build
 ```
 
-Tests cover the hero identity, anchors, the menu, the single dark theme, the 404 page,
-all eight case studies, contact delivery (EmailJS is mocked), the local guide, the
-Saran City game logic (XP, badges, persistence, synthetic data) and its end-to-end
-flow. Latest run: TypeScript clean, 70 of 70 tests pass, production build passes. Lint
-reports 2 errors and 9 warnings, all pre-existing and identical to `main`. See
-[docs/remediation-status.md](docs/remediation-status.md) for what is verified and what still
-needs configuration.
+Stack: React, TypeScript, Vite, Tailwind CSS, deployed as a static site on Vercel.
 
-`npm run lint` still reports two errors in unused shadcn files
-([command.tsx](src/components/ui/command.tsx) and
-[textarea.tsx](src/components/ui/textarea.tsx)). They predate the redesign and were
-left alone.
+**Last verified run:** TypeScript clean, 80 of 80 tests pass, production build passes. Lint
+reports 2 errors and 9 warnings, all pre-existing and identical to `main`. The two errors are in
+unused shadcn files ([command.tsx](src/components/ui/command.tsx),
+[textarea.tsx](src/components/ui/textarea.tsx)) that I left alone. What is verified versus what
+still needs configuration is tracked in [docs/remediation-status.md](docs/remediation-status.md).
 
-## Public metadata
+Accessibility basics: keyboard operable, Escape goes back, a district list replaces the map on
+narrow screens, tap targets are at least 44px, and nothing hides behind floating buttons on
+phones.
 
-[index.html](index.html) has the canonical URL, Open Graph and Twitter tags and
-Person structured data. [favicon.svg](public/favicon.svg) is the favicon.
-[social-preview.png](public/social-preview.png) is the 1200x630 share image, built
-from the same portrait and headline.
+Progress is saved in your browser's `localStorage` (`saran-city:progress:v1`; the key keeps its
+original name so earlier progress is not lost). You can reset it from the progress panel.
 
-## Contact Form
+### SaranAI
 
-The contact form sends through [EmailJS](https://www.emailjs.com/) directly from the
-browser. All three values are **public identifiers**: they are visible in the shipped
-JavaScript by design. Never put an EmailJS private key or access token in this project.
+The SaranAI button is a local, rule-based guide. It is **not** a generative AI service, makes no
+network requests, and answers only from the public data on the site.
 
-### Variables the code reads
+---
+
+## Contact form setup
+
+The form sends through [EmailJS](https://www.emailjs.com/) straight from the browser. All three
+values are **public identifiers** and are visible in the shipped JavaScript by design. Never put
+an EmailJS private key or access token in this project.
 
 | Variable | Where to find it in EmailJS |
 | --- | --- |
-| `VITE_EMAILJS_SERVICE_ID` | Email Services, the "Service ID" (looks like `service_xxxxxxx`) |
-| `VITE_EMAILJS_TEMPLATE_ID` | Email Templates, the "Template ID" (looks like `template_xxxxxxx`) |
-| `VITE_EMAILJS_PUBLIC_KEY` | Account, then General, "Public Key" (about 16 characters) |
+| `VITE_EMAILJS_SERVICE_ID` | Email Services, "Service ID" (`service_xxxxxxx`) |
+| `VITE_EMAILJS_TEMPLATE_ID` | Email Templates, "Template ID" (`template_xxxxxxx`) |
+| `VITE_EMAILJS_PUBLIC_KEY` | Account, General, "Public Key" (about 16 characters) |
 
-They are read in [Contact.tsx](src/components/sections/Contact.tsx) and typed in
-[vite-env.d.ts](src/vite-env.d.ts). `.env.example` lists them with placeholders only; `.env`
-is git-ignored.
+**Locally:** copy `.env.example` to `.env`, fill in your own values, restart `npm run dev`
+(Vite only reads `.env` at start-up). `.env` is git-ignored.
 
-### Local setup
-1. Copy `.env.example` to `.env`.
-2. Replace the placeholders with your own values from the EmailJS dashboard.
-3. Restart `npm run dev`. Vite only reads `.env` at start-up.
+**On Vercel:**
+1. Project, **Settings, Environment Variables**.
+2. Add the three variables with exactly those names for **Production** (and Preview if wanted).
+3. **Redeploy.** Vite inlines them at build time, so existing deployments don't change.
+4. In EmailJS, **Account, Security**: add `saran-cloud-portfolio.vercel.app` to allowed origins if
+   domain restriction is on.
 
-### Vercel setup
-1. Vercel dashboard, your project, **Settings, Environment Variables**.
-2. Add the three variables above with exactly those names, for **Production** (and
-   Preview if you want the form to work on preview deployments).
-3. **Redeploy.** Vite inlines these values at build time, so changing them does not affect an
-   existing deployment until it is rebuilt (Deployments, the latest one, Redeploy).
-4. In EmailJS, open **Account, Security** and add your domain
-   (`saran-cloud-portfolio.vercel.app`) to the allowed origins if domain restriction is on.
+**Template:** suggested variables are `from_name`, `from_email`, `reply_to`, `to_email`,
+`message` and `page_url`. Set "To email" to your inbox and "Reply-To" to `{{reply_to}}`.
 
-### EmailJS template
-Recommended template variables: `from_name`, `from_email`, `reply_to`, `to_email`, `message`
-and `page_url`. Set the template's "To email" to your inbox and "Reply-To" to `{{reply_to}}`.
+### How the form behaves
 
-### Behaviour
-- **Not configured** (any variable missing, or still a `your_...` placeholder): the button
-  reads "Write in my email app" and opens a pre-filled `mailto:` message instead. Nothing
-  claims delivery.
-- **Sending:** the button shows "Sending...", is disabled, the fields are locked and the form
-  is `aria-busy`. A second submit while one is in flight is ignored, so double clicks send once.
-  A request that takes longer than 15 seconds is treated as failed.
-- **Success:** a confirmation appears and the form is cleared only after EmailJS confirms.
-- **Failure:** a clear message (with a specific one for rate limiting), the visitor's text is
-  kept, the button is usable again, and a "send it from your email app" link carries the
-  message as a `mailto:`.
+- **Not configured** (a variable is missing or still a `your_...` placeholder): the button says
+  "Write in my email app" and opens a pre-filled `mailto:`. It never pretends to have sent.
+- **Sending:** button shows "Sending...", fields lock, the form is `aria-busy`, and extra clicks
+  are ignored. A request over 15 seconds counts as failed.
+- **Success:** confirmation and a cleared form, only after EmailJS confirms.
+- **Failure:** a clear message (a specific one for rate limits), your text is kept, and a "send it
+  from your email app" link carries the message as a `mailto:`.
 
-### Status of delivery
-Delivery is **not verified end to end, and the form is not yet configured with real
-credentials.** When I tested, the local `.env` still held the `.env.example` placeholders for
-the Template ID and Public Key (only the Service ID had a different value). A submission with
-those was rejected by EmailJS with HTTP 400, "The Public Key is invalid", so no email was
-delivered. That result says nothing about your real EmailJS account.
+### Is it verified? Not yet.
 
-The form now treats any `your_...` placeholder value as **not configured** and uses the
-`mailto:` fallback instead, so copying `.env.example` unchanged can never produce a form that
-looks live but cannot send. To finish: put the real values in `.env` and in Vercel, redeploy,
-then submit the live form once and confirm the email arrives in your inbox. Until you have
-seen that email, treat delivery as unverified.
+Delivery is **not verified end to end, and the form is not configured with real credentials.**
+In testing, the local `.env` still held `.env.example` placeholders, and EmailJS rejected the
+request with HTTP 400 ("The Public Key is invalid"), so nothing was delivered. That says nothing
+about a real account. To close it out: set real values locally and on Vercel, redeploy, submit
+the live form once, and confirm the email lands in the inbox. Until then, treat delivery as
+unverified.
+
+---
 
 ## Analytics
 
 [Vercel Web Analytics](https://vercel.com/docs/analytics) is mounted once in
-[App.tsx](src/App.tsx). Custom events are sent from [analytics.ts](src/lib/analytics.ts) and use
-fixed labels only, never anything a visitor typed:
+[App.tsx](src/App.tsx). Custom events come from [analytics.ts](src/lib/analytics.ts) and use
+**fixed labels only**, never anything a visitor typed:
 
 - `resume_download` with `source`: `recruiter_hero`, `contact`, `assistant`, `game_hud`,
   `game_intro`, `game_hq` or `game_dossier`.
 - `recruiter_mode_open` with `source`: `direct_link` (landing on `?mode=recruiter`) or `game`
   (switching from the game, with `from` set to the scene name).
 
-Custom events appear in the Vercel dashboard only if your plan includes them; page views and
-visitors work on all plans. Ad blockers can hide all of it.
+Event ingestion in the Vercel dashboard is not yet confirmed.
 
-**Verification status:** in a local browser test the events are queued on `window.va` with the
-labels above and no visitor data, and the Analytics script path is present in the production
-bundle. **Ingestion by Vercel is not verified.** The script only exists on a Vercel
-deployment, so confirm by opening the live site, downloading the resume once, and checking
-Analytics in the Vercel dashboard (custom events need a plan that includes them).
+---
+
+## Known limits
+
+- No sound, on purpose.
+- The player is a portrait, not a full-body avatar.
+- Missions simulate the *kind* of work I do; they are not client systems.
+- The mini-map only appears on screens 1600px or wider.
+- The world map is a stylized plan, not a realistic coastal city.
+
+## Map of the repo
+
+| Where | What |
+| --- | --- |
+| [src/city](src/city) | The whole game layer: scenes, map, missions, state, character, videos |
+| [src/pages/Index.tsx](src/pages/Index.tsx) | The conventional portfolio used by Recruiter Mode |
+| [src/data/portfolio.ts](src/data/portfolio.ts) | All portfolio content |
+| [docs](docs) | Asset requirements, design reference, remediation status, content to-dos, screenshots |
+| [index.html](index.html) | Canonical URL, Open Graph, Twitter tags and Person structured data |
+
+Built by Saran S. If something here sparks a conversation, the contact form (or the mailto
+fallback) is the easiest way in.

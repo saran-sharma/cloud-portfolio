@@ -1,4 +1,4 @@
-/* RECRUITER MODE: the conventional portfolio presented inside the Saran City visual identity.
+/* RECRUITER MODE: the conventional portfolio presented inside the Saran Universe visual identity.
    Colour tokens, fonts and the skyline come from city.css and CitySkyline. This file only
    restyles structure: header, hero, dossier panels, buttons and forms. */
 
@@ -56,6 +56,7 @@
 .recruiter-city .hero { background: linear-gradient(180deg, #080520 0%, #1d0c40 52%, #4a1260 80%, #7a1f6a 100%); border-bottom: 1px solid var(--sc-line); }
 .hero-sky { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .hero-sky-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .26; pointer-events: none; mix-blend-mode: screen; }
+.network-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .hero-sky svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 30%; }
 .hero-sky .sc-sun { left: 50%; bottom: 12%; width: min(34vw, 420px); opacity: .9; }
 .recruiter-city .hero-title .is-accent { background: linear-gradient(100deg, var(--sc-orange), var(--sc-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -168,6 +169,122 @@
   .recruiter-city .experience-themes, .recruiter-city .credential, .recruiter-city .cert-list { padding-inline: 20px; }
   .recruiter-city .journey { padding-inline: 18px; }
   .recruiter-city .skill-row { padding: 22px 20px; }
+}
+/* ===== Scroll experience =====
+   A dusk-to-night backdrop, a scroll-linked hero, chapter numbers, a tech ribbon, a timeline
+   that draws itself and cursor spotlights. Everything is driven by CSS variables written by
+   use-scroll-effects.ts (--sp page, --hp hero, --ep element) and animates transform/opacity
+   only. With prefers-reduced-motion nothing is written, so every variable keeps its resting
+   value and the page is static. The rise-in effects use the individual `translate` property
+   so they never fight the hover `transform` rules above. */
+.recruiter-city { isolation: isolate; overflow-x: clip; }
+.recruiter-city .portfolio-page { background: transparent; }
+.recruiter-city .projects-section, .recruiter-city .experience-section, .recruiter-city .contact-section { background: transparent; }
+
+.recruiter-city .scroll-progress { position: fixed; z-index: 60; top: 0; left: 0; right: 0; height: 3px; pointer-events: none; }
+.recruiter-city .scroll-progress i { display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(var(--sp, 0)); background: linear-gradient(90deg, var(--sc-cyan), var(--sc-magenta), var(--sc-orange)); box-shadow: 0 0 12px rgba(34, 230, 255, .6); will-change: transform; }
+
+.recruiter-city .scroll-sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: linear-gradient(180deg, #05031a 0%, #080626 60%, #0b0830 100%); }
+.recruiter-city .scroll-sky > * { position: absolute; }
+/* The day, by page progress (--sp): sunrise at 0, daylight peaking near .2, dusk near .58, night after .75. */
+.recruiter-city .scroll-sky-day { inset: 0; background: linear-gradient(180deg, #123470 0%, #1b4a8c 55%, #2b63a6 100%); opacity: max(0, calc(1 - max(var(--sp, 0) - .2, .2 - var(--sp, 0)) * 3.2)); will-change: opacity; }
+.recruiter-city .scroll-sky-dusk { inset: 0; background: linear-gradient(180deg, #1e0f4a 0%, #4a1a72 55%, #8a2a70 100%); opacity: max(0, calc(1 - max(var(--sp, 0) - .58, .58 - var(--sp, 0)) * 4.2)); will-change: opacity; }
+.recruiter-city .scroll-sky-dawn { inset: 0; background: radial-gradient(120vw 62vh at 50% 108%, rgba(255, 170, 110, .5), transparent 70%); opacity: max(0, calc(1 - var(--sp, 0) * 5)); }
+.recruiter-city .scroll-sky-glow { inset: -15% 0; background: radial-gradient(60vw 50vh at 86% 22%, rgba(255, 46, 147, .12), transparent 70%), radial-gradient(52vw 50vh at 8% 72%, rgba(34, 230, 255, .1), transparent 70%); transform: translate3d(0, calc(var(--sp, 0) * -14vh), 0); }
+.recruiter-city .scroll-sky-stars { left: 0; right: 0; top: 0; height: 150%; opacity: min(1, max(0, calc((var(--sp, 0) - .5) * 4))); }
+.recruiter-city .scroll-sky-stars.is-far { background-image: radial-gradient(1.2px 1.2px at 8% 12%, #fff, transparent), radial-gradient(1px 1px at 19% 38%, #cfe9ff, transparent), radial-gradient(1.2px 1.2px at 31% 8%, #fff, transparent), radial-gradient(1px 1px at 44% 26%, #ffe7f3, transparent), radial-gradient(1.2px 1.2px at 57% 14%, #fff, transparent), radial-gradient(1px 1px at 68% 44%, #cfe9ff, transparent), radial-gradient(1.2px 1.2px at 79% 20%, #fff, transparent), radial-gradient(1px 1px at 91% 36%, #ffe7f3, transparent), radial-gradient(1px 1px at 14% 62%, #fff, transparent), radial-gradient(1.2px 1.2px at 38% 74%, #cfe9ff, transparent), radial-gradient(1px 1px at 62% 68%, #fff, transparent), radial-gradient(1.2px 1.2px at 84% 80%, #ffe7f3, transparent); transform: translate3d(0, calc(var(--sp, 0) * -16%), 0); }
+.recruiter-city .scroll-sky-stars.is-near { background-image: radial-gradient(1.8px 1.8px at 5% 30%, #fff, transparent), radial-gradient(2px 2px at 24% 18%, #aee9ff, transparent), radial-gradient(1.8px 1.8px at 47% 52%, #fff, transparent), radial-gradient(2px 2px at 73% 10%, #ffd0e6, transparent), radial-gradient(1.8px 1.8px at 88% 58%, #fff, transparent), radial-gradient(2px 2px at 36% 88%, #aee9ff, transparent), radial-gradient(1.8px 1.8px at 66% 92%, #fff, transparent); transform: translate3d(0, calc(var(--sp, 0) * -34%), 0); }
+.recruiter-city .scroll-sky-sun { top: 0; right: 3vw; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle, #fffbe0 0%, #ffe38a 55%, #ffb347 100%); box-shadow: 0 0 60px 18px rgba(255, 200, 110, .42); opacity: min(.9, max(0, calc((.62 - var(--sp, 0)) * 6))); transform: translate3d(0, calc(10vh + 70vh * (var(--sp, 0) - .32) * (var(--sp, 0) - .32) * 9.77), 0); }
+.recruiter-city .scroll-sky-moon { top: 12vh; right: 3vw; width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #fffbea 0%, #dfe4ff 55%, #9ea2e0 100%); box-shadow: 0 0 36px 6px rgba(190, 200, 255, .3); opacity: min(.75, max(0, calc((var(--sp, 0) - .58) * 4))); transform: translate3d(0, calc(var(--sp, 0) * 8vh), 0); }
+.recruiter-city .scroll-sky-city { left: 0; right: 0; bottom: -2px; height: 24vh; opacity: min(.3, max(.07, calc((var(--sp, 0) - .25) * .8))); transform: translate3d(0, calc(var(--sp, 0) * 4vh), 0); -webkit-mask-image: linear-gradient(0deg, #000 40%, transparent); mask-image: linear-gradient(0deg, #000 40%, transparent); }
+.recruiter-city .scroll-sky-city svg { display: block; width: 100%; height: 100%; }
+
+/* Hero: a sunrise. The sun climbs from behind the skyline on load, then sets lower as you scroll away,
+   and the copy drifts up faster than the page. */
+.recruiter-city .hero { background: linear-gradient(180deg, #16336b 0%, #35569c 52%, #6f78b8 78%, #e49a86 92%, #ffd08a 100%); }
+.recruiter-city .hero-sky .sc-sun { background: linear-gradient(180deg, #fffbe0 0%, #ffe38a 55%, #ffb347 100%); box-shadow: 0 0 140px rgba(255, 200, 110, .6); opacity: 1; animation: sun-rise 2.8s cubic-bezier(.2, .7, .2, 1) .2s backwards; }
+@keyframes sun-rise { from { translate: 0 75%; opacity: 0; } 30% { opacity: 1; } to { translate: 0 0; opacity: 1; } }
+.recruiter-city .hero .hero-eyebrow { color: #ffe2b0; }
+.recruiter-city .hero-title .is-accent { background: linear-gradient(100deg, #ffc65c, #ff7a59); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.recruiter-city .hero .hero-eyebrow, .recruiter-city .hero .hero-body p, .recruiter-city .hero .hero-tech { text-shadow: 0 1px 14px rgba(8, 14, 48, .6); }
+.recruiter-city .hero .action-secondary { background: rgba(8, 14, 48, .55); }
+.recruiter-city .hero .hero-head, .recruiter-city .hero .hero-body { transform: translate3d(0, calc(var(--hp, 0) * -56px), 0); opacity: calc(1 - var(--hp, 0) * .55); }
+.recruiter-city .hero-sky .sc-sun { transform: translate3d(calc(var(--px, 0) * -18px), calc(var(--py, 0) * -10px + var(--hp, 0) * 200px), 0); }
+.recruiter-city .hero-sky svg { transform: translate3d(calc(var(--px, 0) * 12px), calc(var(--py, 0) * 4px + var(--hp, 0) * -28px), 0) scale(1.04); }
+
+/* Blocks rise into place as they enter, and their contents follow one after another. */
+.recruiter-city .reveal { opacity: 0; translate: 0 36px; transition: opacity .8s ease, translate .9s cubic-bezier(.2, .7, .2, 1), transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.recruiter-city .reveal.is-shown { opacity: 1; translate: none; animation: none; }
+.recruiter-city .feature .feature-body > * { opacity: 0; translate: 0 22px; transition: opacity .7s ease, translate .8s cubic-bezier(.2, .7, .2, 1); }
+.recruiter-city .feature.is-shown .feature-body > * { opacity: 1; translate: none; }
+.recruiter-city .feature .feature-body > :nth-child(1) { transition-delay: .15s; }
+.recruiter-city .feature .feature-body > :nth-child(2) { transition-delay: .22s; }
+.recruiter-city .feature .feature-body > :nth-child(3) { transition-delay: .29s; }
+.recruiter-city .feature .feature-body > :nth-child(4) { transition-delay: .36s; }
+.recruiter-city .feature .feature-body > :nth-child(5) { transition-delay: .43s; }
+.recruiter-city .feature .feature-visual { opacity: 0; transform: translate3d(56px, 0, 0) scale(.96); translate: 0 calc((.5 - var(--ep, .5)) * 64px); transition: opacity .9s ease .25s, transform 1s cubic-bezier(.2, .7, .2, 1) .25s; }
+.recruiter-city .feature.is-flipped .feature-visual { transform: translate3d(-56px, 0, 0) scale(.96); }
+.recruiter-city .feature.is-shown .feature-visual { opacity: 1; transform: none; }
+
+/* Chapter headings: a drawn rule, a masked rise, and an outlined number that drifts. */
+.recruiter-city .section-heading, .recruiter-city .about-intro, .recruiter-city .contact-intro { position: relative; isolation: isolate; }
+.recruiter-city .section-heading > .eyebrow { display: flex; align-items: center; gap: 14px; }
+.recruiter-city .section-heading > .eyebrow::before { content: ''; height: 1px; width: 0; background: linear-gradient(90deg, var(--sc-magenta), var(--sc-cyan)); transition: width .9s cubic-bezier(.2, .7, .2, 1) .05s; }
+.recruiter-city .section-heading.is-shown > .eyebrow::before { width: 56px; }
+.recruiter-city .section-heading h2, .recruiter-city .section-heading .section-intro { opacity: 0; translate: 0 34px; transition: opacity .8s ease, translate .9s cubic-bezier(.2, .7, .2, 1); }
+.recruiter-city .section-heading.is-shown h2 { opacity: 1; translate: none; transition-delay: .1s; }
+.recruiter-city .section-heading.is-shown .section-intro { opacity: 1; translate: none; transition-delay: .25s; }
+.recruiter-city .section-index { position: absolute; z-index: -1; right: 0; top: -.5em; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; font-size: clamp(6rem, 14vw, 13rem); line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1px rgba(168, 156, 255, .28); pointer-events: none; user-select: none; translate: 0 calc((.5 - var(--ep, .5)) * 90px); }
+.recruiter-city .contact-intro .section-index { top: -.6em; }
+
+/* Technology ribbon: two rows slide in opposite directions as it passes through the screen. */
+.recruiter-city .tech-marquee { display: grid; gap: 14px; padding-block: 34px; overflow: hidden; border-block: 1px solid var(--sc-line); background: linear-gradient(90deg, rgba(255, 46, 147, .08), rgba(34, 230, 255, .08)); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.recruiter-city .tech-row { display: flex; align-items: center; gap: 40px; width: max-content; margin: 0; padding: 0; list-style: none; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: clamp(1.5rem, 3.4vw, 2.8rem); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; will-change: transform; }
+.recruiter-city .tech-row li { display: flex; align-items: center; gap: 40px; color: transparent; -webkit-text-stroke: 1px rgba(247, 240, 232, .55); }
+.recruiter-city .tech-row li:nth-child(3n + 1) { color: var(--sc-text); -webkit-text-stroke: 0; }
+.recruiter-city .tech-row li::after { content: '\2726'; font-size: .5em; color: var(--sc-magenta); -webkit-text-stroke: 0; }
+.recruiter-city .tech-row.is-left { transform: translate3d(calc((var(--ep, .5) - .5) * -520px), 0, 0); }
+.recruiter-city .tech-row.is-right { transform: translate3d(calc((var(--ep, .5) - .5) * 520px - 25%), 0, 0); }
+
+/* Toolkit chips pop in once their row appears. */
+.recruiter-city .skill-row li { transition: color .25s ease; }
+.recruiter-city .skill-row li:hover { color: var(--sc-cyan); }
+.recruiter-city .skill-row.is-shown li { animation: chip-in .55s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(.25s + var(--i, 0) * 28ms); }
+@keyframes chip-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* Experience timeline: the line fills and each node lights up as you reach it. */
+.recruiter-city .experience-themes { position: relative; padding-left: 52px; }
+.recruiter-city .experience-themes::before, .recruiter-city .experience-themes::after { content: ''; position: absolute; left: 24px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; }
+.recruiter-city .experience-themes::before { background: var(--sc-line); }
+.recruiter-city .experience-themes::after { background: linear-gradient(180deg, var(--sc-cyan), var(--sc-magenta)); box-shadow: 0 0 12px rgba(34, 230, 255, .55); transform-origin: 50% 0; transform: scaleY(var(--ep, 1)); }
+.recruiter-city .experience-themes li { position: relative; }
+.recruiter-city .experience-themes li::before { content: ''; position: absolute; left: -32px; top: 31px; width: 10px; height: 10px; border-radius: 50%; background: var(--sc-bg); border: 2px solid var(--sc-magenta); opacity: calc(.35 + var(--ep, 1) * .65); transform: scale(calc(.7 + var(--ep, 1) * .5)); box-shadow: 0 0 calc(var(--ep, 1) * 14px) var(--sc-magenta); }
+
+/* Panels glow under the cursor. */
+.recruiter-city .feature, .recruiter-city .more-item > article, .recruiter-city .skill-row, .recruiter-city .experience-role, .recruiter-city .experience-themes, .recruiter-city .credential, .recruiter-city .cert-list, .recruiter-city .journey { background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), rgba(34, 230, 255, .11), transparent 70%), var(--sc-panel); }
+
+@media (max-width: 900px) {
+  .recruiter-city .feature .feature-visual, .recruiter-city .feature.is-flipped .feature-visual { transform: translate3d(0, 36px, 0) scale(.98); translate: none; }
+  .recruiter-city .feature.is-shown .feature-visual { transform: none; }
+  .recruiter-city .section-index { font-size: clamp(4.5rem, 24vw, 8rem); top: -.35em; }
+  .recruiter-city .hero .hero-head, .recruiter-city .hero .hero-body { transform: translate3d(0, calc(var(--hp, 0) * -24px), 0); }
+}
+@media (max-width: 700px) {
+  .recruiter-city .scroll-sky-moon, .recruiter-city .scroll-sky-sun { display: none; }
+  .recruiter-city .experience-themes { padding-left: 40px; }
+  .recruiter-city .experience-themes::before, .recruiter-city .experience-themes::after { left: 17px; }
+  .recruiter-city .experience-themes li::before { left: -27px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recruiter-city .hero-sky .sc-sun { animation: none; }
+  .recruiter-city .scroll-sky-sun, .recruiter-city .scroll-sky-moon { display: none; }
+  .recruiter-city .reveal, .recruiter-city .feature .feature-body > *, .recruiter-city .feature .feature-visual, .recruiter-city .section-heading h2, .recruiter-city .section-heading .section-intro { opacity: 1; translate: none; transform: none; transition: none; }
+  .recruiter-city .section-heading > .eyebrow::before { width: 56px; transition: none; }
+  .recruiter-city .skill-row.is-shown li { animation: none; }
+  .recruiter-city .scroll-progress { display: none; }
+  .recruiter-city .tech-row { flex-wrap: wrap; justify-content: center; width: auto; padding-inline: 24px; transform: none !important; }
+  .recruiter-city .tech-row li[data-dup] { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .recruiter-city { animation: none; }

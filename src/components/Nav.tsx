@@ -58,8 +58,8 @@ export const Nav = ({ onExploreCity }: { onExploreCity?: () => void }) => {
         </ul>
         <div className="nav-actions">
           {onExploreCity && (
-            <button type="button" className="nav-city" onClick={onExploreCity} aria-label="Explore Saran City" title="Explore Saran City">
-              <Gamepad2 size={16} aria-hidden="true" /> <span>Saran City</span>
+            <button type="button" className="nav-city" onClick={onExploreCity}             aria-label="Explore Saran Universe" title="Explore Saran Universe">
+                          <Gamepad2 size={16} aria-hidden="true" /> <span>Saran Universe</span>
             </button>
           )}
           <a href="#contact" className="nav-connect">Let's connect <ArrowUpRight size={15} /></a>

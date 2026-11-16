@@ -31,7 +31,7 @@ export const PlayerProfile = () => {
         <h2>Specialties</h2>
         <ul className="sc-chips" aria-label="Specialties">{SPECIALTIES.map((item) => <li key={item}>{item}</li>)}</ul>
         <div className="sc-actions">
-          <button type="button" className="sc-btn is-big" onClick={() => go({ name: "map" })}>Enter Saran City <ArrowRight size={18} /></button>
+          <button type="button" className="sc-btn is-big" onClick={() => go({ name: "map" })}>Enter Saran Universe <ArrowRight size={18} /></button>
         </div>
         <p className="sc-note">Everything here comes from real professional experience. No levels or stats are invented.</p>
       </div>

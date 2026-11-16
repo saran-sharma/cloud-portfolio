@@ -7,26 +7,36 @@ import { Projects } from "@/components/sections/Projects";
 import { Certifications } from "@/components/sections/Certifications";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
-import { lazy, Suspense } from "react";
+import { ScrollProgress, ScrollSky } from "@/components/ScrollSky";
+import { TechMarquee } from "@/components/TechMarquee";
+import { useScrollEffects } from "@/hooks/use-scroll-effects";
+import { lazy, Suspense, useRef } from "react";
 
 const SaranAI = lazy(() => import("@/components/SaranAI").then((module) => ({ default: module.SaranAI })));
 
-const Index = ({ onExploreCity }: { onExploreCity?: () => void }) => (
-  <div className="min-h-dvh bg-background text-foreground">
-    <a href="#main-content" className="skip-link">Skip to content</a>
-    <Nav onExploreCity={onExploreCity} />
-    <main id="main-content" tabIndex={-1}>
-      <Hero />
-      <About />
-      <Projects />
-      <Skills />
-      <Experience />
-      <Certifications />
-      <Contact />
-    </main>
-    <Footer />
-    <Suspense fallback={null}><SaranAI /></Suspense>
-  </div>
-);
+const Index = ({ onExploreCity }: { onExploreCity?: () => void }) => {
+  const host = useRef<HTMLDivElement>(null);
+  useScrollEffects(host);
+  return (
+    <div ref={host} className="portfolio-page min-h-dvh text-foreground">
+      <ScrollProgress />
+      <ScrollSky />
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <Nav onExploreCity={onExploreCity} />
+      <main id="main-content" tabIndex={-1}>
+        <Hero />
+        <About />
+        <TechMarquee />
+        <Projects />
+        <Skills />
+        <Experience />
+        <Certifications />
+        <Contact />
+      </main>
+      <Footer />
+      <Suspense fallback={null}><SaranAI /></Suspense>
+    </div>
+  );
+};
 
 export default Index;

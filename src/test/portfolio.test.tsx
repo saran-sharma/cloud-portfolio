@@ -71,7 +71,7 @@ describe("Portfolio identity and navigation", () => {
     expect(download).toHaveAttribute("download");
   }, 20000);
 
-  it("supports menu dismissal and always uses the single dark Saran City theme", async () => {
+  it("supports menu dismissal and always uses the single dark Saran Universe theme", async () => {
     window.localStorage.setItem("theme", "light");
     render(<App />);
     await screen.findByRole("button", { name: "SaranAI" }, { timeout: 10000 });

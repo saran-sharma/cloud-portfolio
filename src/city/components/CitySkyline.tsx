@@ -18,7 +18,7 @@ const WINDOWS = BUILDINGS.flatMap(([left, right, roof], building) => {
   return lit;
 });
 
-/** The coastal skyline silhouette shared by the Saran City intro and the Recruiter Mode hero. */
+/** The coastal skyline silhouette shared by the Saran Universe intro and the Recruiter Mode hero. */
 export const CitySkyline = () => (
   <svg viewBox="0 0 1600 300" preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true">
     <path d="M0,300 V210 h60 v-70 h50 v40 h40 v-110 h46 v150 h70 v-60 h56 v90 h80 v-130 h40 v100 h90 v-50 h60 v120 h110 v-90 h54 v-120 h46 v150 h70 v-80 h60 v110 h86 v-150 h40 v180 h70 v-70 h56 v100 h80 V300 Z" fill="#0b0720" />

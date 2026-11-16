@@ -1,4 +1,4 @@
-/* SARAN CITY: original neon-sunset visual language. Scoped to .saran-city and a few portaled dialogs. */
+/* SARAN UNIVERSE: original neon-sunset visual language. Scoped to .saran-city and a few portaled dialogs. */
 
 .saran-city,
 .recruiter-city,
@@ -112,6 +112,32 @@
 .sc-intro-sky svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 36%; }
 .sc-sun { position: absolute; left: 36%; bottom: 20%; width: min(38vw, 440px); aspect-ratio: 1; border-radius: 50%; background: linear-gradient(180deg, #ffd36a 0%, #ff6a8a 60%, #ff2e93 100%); box-shadow: 0 0 140px rgba(255, 106, 138, .55); -webkit-mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 50%, #000 50% 62%, transparent 62% 67%, #000 67% 78%, transparent 78% 84%, #000 84%); mask-image: linear-gradient(180deg, #000 0 46%, transparent 46% 50%, #000 50% 62%, transparent 62% 67%, #000 67% 78%, transparent 78% 84%, #000 84%); }
 .sc-intro-grid { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(24px, 5vw, 80px); align-items: center; min-height: 100dvh; padding: clamp(72px, 12vh, 120px) clamp(20px, 6vw, 96px); }
+
+/* Opening clip: a full-bleed cinematic layer behind the game interface. It is cropped (cover), never letterboxed,
+   so there are no black side areas, and it is anchored to the top so the character's hair is never cut off. */
+.sc-intro-video { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; object-position: var(--sc-film-x) 0%; background: #080520; pointer-events: none; }
+.sc-intro-video.is-fading { opacity: 0; transition: opacity .9s ease; }
+/* While the clip plays only the clip, Skip and Recruiter Mode show. The title and menu fade in as it dissolves. */
+.sc-intro.is-video .sc-intro-grid { visibility: hidden; }
+.sc-intro.is-video .sc-letterbox { display: none; }
+.sc-intro.is-reveal .sc-intro-grid, .sc-intro.is-reveal .sc-letterbox { animation: sc-fade .9s ease .1s both; }
+
+/* Film home (wide screens): the clip's final frame is the home screen, so the intro flows straight into it.
+   No sun, skyline, black bar or second portrait card; a left-hand scrim keeps the title and menu readable.
+   --sc-film-x is the shared horizontal crop for the clip and its still, so the handoff never shifts. Lower values
+   keep more of the left side, which moves your face right, away from the title on squarer screens. */
+.sc-intro { --sc-film-x: 12%; }
+.sc-intro-still { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--sc-film-x) 0%; background: #080520; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.sc-intro-scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; transition: opacity .9s ease; background: linear-gradient(90deg, rgba(8, 5, 32, .9) 0%, rgba(8, 5, 32, .72) 26%, rgba(8, 5, 32, .28) 46%, rgba(8, 5, 32, 0) 60%), linear-gradient(0deg, rgba(8, 5, 32, .62) 0%, rgba(8, 5, 32, 0) 34%); }
+.sc-intro.is-film.is-video .sc-intro-scrim { opacity: 0; }
+.sc-intro.is-film .sc-intro-sky, .sc-intro.is-film .sc-letterbox { display: none; }
+.sc-intro.is-film .sc-intro-grid { grid-template-columns: minmax(0, 1fr); }
+.sc-intro.is-film .sc-intro-copy { max-width: min(36vw, 560px); }
+.sc-intro.is-film h1 { font-size: clamp(3.2rem, 6.4vw, 6.4rem); }
+.sc-intro.is-film .sc-subtitle { font-size: clamp(.9rem, 1.35vw, 1.2rem); letter-spacing: .24em; line-height: 1.5; }
+.sc-intro.is-film .sc-quote { font-size: 1.125rem; }
+.sc-intro.is-film .sc-menu { max-width: min(400px, 100%); }
+.sc-intro.is-film .sc-menu-foot { max-width: 400px; }
 .sc-presents { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; letter-spacing: .32em; color: #ffd9ec; }
 .sc-intro h1 { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(3.4rem, 10vw, 8.2rem); line-height: .95; letter-spacing: .02em; text-transform: uppercase; margin-top: 14px; background: linear-gradient(100deg, #fff 10%, #ffd9ec 45%, #22e6ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 6px 40px rgba(255, 46, 147, .45)); }
 .sc-subtitle { margin-top: 6px; font-family: 'Oswald', sans-serif; font-size: clamp(1.1rem, 2.4vw, 1.7rem); letter-spacing: .38em; color: var(--sc-cyan); }
@@ -139,8 +165,7 @@
 .sc-portrait { --nx: 0; --ny: 0; --lx: 58%; --ly: 30%; --lo: 0; --m: 0; position: relative; overflow: hidden; isolation: isolate; aspect-ratio: 4 / 5; background: #0b0720; border-radius: 6px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 30px 120px rgba(255, 46, 147, .38), 0 0 80px rgba(34, 230, 255, .18); }
 .sc-portrait:not(.is-interactive) { --lo: .45; }
 .sc-portrait-stage { position: absolute; inset: 0; z-index: 1; }
-.sc-portrait img, .sc-portrait-video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 45% 10%; user-select: none; -webkit-user-drag: none; }
-.sc-portrait-video { position: absolute; inset: 0; object-position: 60% 0%; pointer-events: none; }
+.sc-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 45% 10%; user-select: none; -webkit-user-drag: none; }
 .sc-portrait-grade { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(205deg, rgba(34, 230, 255, .14), transparent 46%), linear-gradient(25deg, rgba(255, 46, 147, .2), transparent 56%), linear-gradient(0deg, rgba(7, 6, 20, .85), transparent 34%), radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(7, 6, 20, .5) 100%); }
 .sc-portrait-light { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: var(--lo); mix-blend-mode: soft-light; background: radial-gradient(ellipse 60% 50% at var(--lx) var(--ly), #ffe2ad 0%, rgba(255, 150, 190, .6) 36%, transparent 78%); }
 .sc-portrait-sheen { position: absolute; inset: -20%; z-index: 2; pointer-events: none; background: linear-gradient(115deg, transparent 42%, rgba(255, 224, 175, .14) 48%, rgba(34, 230, 255, .16) 52%, transparent 58%); transform: translateX(-120%); animation: sc-sheen 7.5s ease-in-out 1.8s infinite; mix-blend-mode: screen; }
@@ -564,6 +589,7 @@
   .saran-city *, .saran-city *::before, .saran-city *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .sc-star, .sc-waves { animation: none !important; }
   .sc-window, .sc-portrait, .sc-portrait img, .sc-portrait-sheen, .sc-portrait-hud { animation: none !important; }
-  .sc-portrait-video, .sc-portrait-sheen, .sc-portrait-hud { display: none; }
+  .sc-portrait-sheen, .sc-portrait-hud { display: none; }
+  .sc-intro-video { display: none; }
   .sc-intro-sky .sc-sun, .hero-sky .sc-sun, .sc-intro-sky svg, .hero-sky svg { transition: none; }
 }

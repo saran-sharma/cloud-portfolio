@@ -1,4 +1,4 @@
-# Saran City: character artwork brief
+# Saran Universe: character artwork brief
 
 **Status: external asset required.** Image generation is not available in the coding
 environment, and the character must not be faked with CSS filters, SVG or overlays. Generate

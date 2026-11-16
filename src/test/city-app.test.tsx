@@ -26,7 +26,7 @@ const mockMedia = (reduced: boolean) => {
 const stored = () => JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "{}");
 
 const openMap = async () => {
-  fireEvent.click(await screen.findByRole("button", { name: /Enter Saran City/ }));
+  fireEvent.click(await screen.findByRole("button", { name: /Enter Saran Universe/ }));
   return await screen.findByRole("heading", { name: "Choose a district" });
 };
 
@@ -65,7 +65,7 @@ describe("start screen", () => {
   it("opens on the cinematic title with every required menu option and Recruiter Mode", async () => {
     mockMedia(false);
     render(<App />);
-    expect(await screen.findByRole("heading", { level: 1, name: "SARAN CITY" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1,     name: "SARAN UNIVERSE" })).toBeInTheDocument();
     expect(screen.getByText("SARAN.OS PRESENTS")).toBeInTheDocument();
     expect(screen.getByText("THE ENGINEERING CHRONICLES")).toBeInTheDocument();
     expect(screen.getByText(/Every system has a story. Explore mine./)).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe("start screen", () => {
     expect(screen.getAllByRole("button", { name: /Recruiter Mode/ })).toHaveLength(1);
     const menu = screen.getByRole("navigation", { name: "Main menu" });
     expect(within(menu).getByRole("button", { name: /Start your journey/ })).toBeInTheDocument();
-    expect(within(menu).getByRole("button", { name: /Enter Saran City/ })).toBeInTheDocument();
+    expect(within(menu).getByRole("button", { name: /Enter Saran Universe/ })).toBeInTheDocument();
     expect(within(menu).getByRole("button", { name: /Recruiter Mode/ })).toBeInTheDocument();
     expect(within(menu).getByRole("link", { name: /Download resume/ })).toHaveAttribute("href", "/resume.pdf");
     expect(screen.queryByText(/sound settings/i)).not.toBeInTheDocument();
@@ -90,7 +90,7 @@ describe("start screen", () => {
     expect(screen.getByText("DATA PLATFORM ENGINEER | AI & CLOUD")).toBeInTheDocument();
     expect(screen.getByText(/CHENNAI, INDIA/)).toBeInTheDocument();
     ["Azure Data Engineering", "Databricks", "Microsoft Fabric", "Cloud Platform Engineering", "Infrastructure Automation", "AI Engineering"].forEach((item) => expect(screen.getByText(item)).toBeInTheDocument());
-    fireEvent.click(screen.getByRole("button", { name: /Enter Saran City/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Enter Saran Universe/ }));
     expect(await screen.findByRole("heading", { name: "Choose a district" })).toBeInTheDocument();
   });
 });
@@ -147,7 +147,7 @@ describe("Recruiter Mode", () => {
     window.history.replaceState(null, "", "/?mode=recruiter");
     render(<App />);
     expect(await screen.findByRole("link", { name: "Download Resume" })).toBeInTheDocument();
-    expect(screen.queryByRole("heading", { name: "SARAN CITY" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "SARAN UNIVERSE" })).not.toBeInTheDocument();
   });
 
   it("keeps the player's place when switching modes and back", async () => {
@@ -156,7 +156,7 @@ describe("Recruiter Mode", () => {
     await enterDistrict("Cloud Heights");
     fireEvent.click(screen.getByRole("button", { name: /Recruiter Mode/ }));
     await screen.findByRole("link", { name: "Download Resume" });
-    fireEvent.click(screen.getByRole("button", { name: /Explore Saran City/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Explore Saran Universe/ }));
     expect(await screen.findByRole("heading", { level: 1, name: "Cloud Heights" })).toBeInTheDocument();
     expect(window.location.search).toBe("");
   });
@@ -311,7 +311,7 @@ describe("progress", () => {
     first.unmount();
 
     render(<App />);
-    fireEvent.click(await screen.findByRole("button", { name: /Enter Saran City/ }));
+    fireEvent.click(await screen.findByRole("button", { name: /Enter Saran Universe/ }));
     await screen.findByRole("heading", { name: "Choose a district" });
     expect(screen.getByText(/1 of 6 discovered/)).toBeInTheDocument();
 
