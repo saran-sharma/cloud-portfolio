@@ -46,6 +46,18 @@ export const CityWorldMap = () => {
         <p>Six districts, each built around real engineering work. Select one to explore it. {discovered} of {DISTRICTS.length} discovered.</p>
       </header>
 
+      <div className="sc-harbor-feature">
+        <div><small>Featured mission · Data Docks</small><strong>{MISSIONS["harbor-dispatch"].title}</strong></div>
+        <div className="sc-ops-actions">
+          <button type="button" className="sc-btn is-quiet" onClick={() => go({ name: "mission", id: "harbor-dispatch" })}>
+            {progress.missions.includes("harbor-dispatch") ? "Replay night shift" : "Take the night shift"}
+          </button>
+          <button type="button" className="sc-btn is-quiet" onClick={() => go({ name: "tour" })}>
+            3-minute tour <ArrowRight size={16} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
       <div className={`sc-map-frame ${zoom ? "is-zooming" : ""}`}>
         <div
           className="sc-map-stage"

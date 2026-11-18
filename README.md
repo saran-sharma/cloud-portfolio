@@ -35,9 +35,15 @@ at any time and the site remembers where you were.
    - **Neon AI Labs:** *Intelligence, with a human in the loop.*
    - **Operations HQ:** *See the platform. Then ask why.*
    - **Saran's Headquarters:** *The engineer behind the universe.* The dossier, resume and contact.
-4. **The missions.** Six small simulations (a data pipeline, a cost review, an incident
-   investigation, a storage assessment, a PIM workflow, an MCP request). They use made-up,
-   synthetic data only. They show *how I think*, not anything from a client.
+4. **The missions.** Fourteen browser-only engineering simulations, plus the HQ dossier.
+   The **3-minute tour** (`/?tour=1`) offers
+   three case study stops, links to the resume and Recruiter Mode, and a board for the eight
+   expansion missions. Start with **Harbor Dispatch** (`/?mission=harbor-dispatch`), then try
+   **Backfill Planner**, **Least-Privilege Lab**, **Terraform Plan Review**, **Runbook Builder**,
+   **KQL Detective**, **Agent Review**, or the cross-district **Platform Day** capstone.
+   All evidence is fictional. Plans and KQL results are simulated; no cloud service or AI model
+   is contacted. The seven missions after Harbor Dispatch alternate between two scenarios at
+   midnight UTC. The debrief lets you practice the other scenario without earning XP twice.
 5. **Case studies.** Every project opens a write-up of what the work was and what I did.
 
 XP and badges only measure how much of the site you've explored. They are not a skill rating.
@@ -197,8 +203,8 @@ npm run build
 
 Stack: React, TypeScript, Vite, Tailwind CSS, deployed as a static site on Vercel.
 
-**Last verified run:** TypeScript clean, 80 of 80 tests pass, production build passes. Lint
-reports 2 errors and 9 warnings, all pre-existing and identical to `main`. The two errors are in
+The test suite covers the simulation rules, replay and saved progress, tour navigation, and
+the explorer summary. The full lint command has two known pre-existing errors in
 unused shadcn files ([command.tsx](src/components/ui/command.tsx),
 [textarea.tsx](src/components/ui/textarea.tsx)) that I left alone. What is verified versus what
 still needs configuration is tracked in [docs/remediation-status.md](docs/remediation-status.md).
@@ -270,9 +276,14 @@ unverified.
 **fixed labels only**, never anything a visitor typed:
 
 - `resume_download` with `source`: `recruiter_hero`, `contact`, `assistant`, `game_hud`,
-  `game_intro`, `game_hq` or `game_dossier`.
+  `game_intro`, `game_hq`, `game_dossier` or `game_tour`.
 - `recruiter_mode_open` with `source`: `direct_link` (landing on `?mode=recruiter`) or `game`
   (switching from the game, with `from` set to the scene name).
+- `mission_complete` with the fixed mission ID on first completion for the current browser
+  progress. Opening saved progress and replaying without resetting do not emit the event.
+
+The progress dialog's **Copy explorer summary** button copies only counts and badge names.
+It does not publish a profile or create a leaderboard.
 
 Event ingestion in the Vercel dashboard is not yet confirmed.
 

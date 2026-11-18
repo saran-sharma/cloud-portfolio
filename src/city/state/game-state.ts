@@ -1,3 +1,4 @@
+import { DISTRICTS, MISSIONS } from "@/city/data/districts";
 import type { BadgeId, DistrictId, MissionId, Mode } from "@/city/types";
 
 export const STORAGE_KEY = "saran-city:progress:v1";
@@ -77,6 +78,18 @@ export function progressReducer(state: Progress, action: Action): Progress {
 
 export const earnedBadges = (progress: Progress): BadgeId[] => BADGES.filter((badge) => badge.earned(progress)).map((badge) => badge.id);
 
+export function explorerSummary(progress: Progress) {
+  const names = BADGES.filter((badge) => badge.earned(progress)).map((badge) => badge.name);
+  return [
+    "Saran Universe | Explorer's Log",
+    `Districts discovered: ${new Set(progress.discovered).size} / ${DISTRICTS.length}`,
+    `Missions completed: ${new Set(progress.missions).size} / ${Object.keys(MISSIONS).length}`,
+    `Case studies opened: ${new Set(progress.projects).size}`,
+    `Badges: ${names.length ? names.join(", ") : "None yet"}`,
+    "Counts reflect portfolio exploration, not professional skill.",
+  ].join("\n");
+}
+
 export function totalXp(progress: Progress): number {
   const missions = progress.missions.reduce((sum, id) => sum + (id === "engineer" ? XP.engineer : XP.mission), 0);
   return progress.discovered.length * XP.district + progress.projects.length * XP.project + missions;
@@ -89,8 +102,8 @@ export function maxXp(districtCount: number, projectCount: number, missionCount:
 const asList = <T extends string>(value: unknown, allowed: readonly T[]): T[] =>
   Array.isArray(value) ? value.filter((item): item is T => typeof item === "string" && (allowed as readonly string[]).includes(item)) : [];
 
-const DISTRICT_IDS: DistrictId[] = ["data-docks", "cloud-heights", "automation-works", "neon-ai-labs", "operations-hq", "headquarters"];
-const MISSION_IDS: MissionId[] = ["pipeline", "cost", "incident", "storage", "pim", "mcp", "engineer"];
+const DISTRICT_IDS = DISTRICTS.map((district) => district.id);
+const MISSION_IDS = Object.values(MISSIONS).map((mission) => mission.id);
 const BADGE_IDS: BadgeId[] = BADGES.map((badge) => badge.id);
 
 /** Reads stored progress defensively: anything unexpected falls back to a fresh start. */

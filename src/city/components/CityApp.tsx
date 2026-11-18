@@ -7,8 +7,10 @@ import { PlayerProfile } from "@/city/components/PlayerProfile";
 import { SaranOSIntro } from "@/city/components/SaranOSIntro";
 import { ToastStack } from "@/city/components/AchievementSystem";
 import { RecruiterMode } from "@/city/components/RecruiterMode";
+import { RecruiterTour } from "@/city/components/RecruiterTour";
 import { CityProvider, useCity } from "@/city/state/CityProvider";
 import "@/city/city.css";
+import "@/city/missions/harbor-dispatch.css";
 import "@/city/recruiter.css";
 
 const SaranAI = lazy(() => import("@/components/SaranAI").then((module) => ({ default: module.SaranAI })));
@@ -52,6 +54,7 @@ const GameShell = () => {
         {scene.name === "intro" && <SaranOSIntro />}
         {scene.name === "profile" && <PlayerProfile />}
         {scene.name === "map" && <CityWorldMap />}
+        {scene.name === "tour" && <RecruiterTour />}
         {scene.name === "district" && <DistrictScene id={scene.id} intro={scene.intro !== false} />}
         {scene.name === "mission" && <MissionExperience id={scene.id} />}
       </main>

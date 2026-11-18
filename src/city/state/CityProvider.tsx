@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import { portfolio } from "@/data/portfolio";
-import { trackRecruiterModeOpen } from "@/lib/analytics";
-import { DISTRICTS, MISSIONS } from "@/city/data/districts";
+import { trackMissionComplete, trackRecruiterModeOpen } from "@/lib/analytics";
+import { DISTRICTS, MISSIONS, isMissionId } from "@/city/data/districts";
 import {
   earnedBadges,
   loadProgress,
@@ -49,7 +49,13 @@ const TOTAL_MISSIONS = Object.keys(MISSIONS).length;
 export function CityProvider({ children }: { children: ReactNode }) {
   const [progress, dispatch] = useReducer(progressReducer, undefined, () => loadProgress(projectIds()));
   const [mode, setModeState] = useState<Mode>(readModeFromUrl);
-  const [scene, setScene] = useState<Scene>({ name: "intro" });
+  const [scene, setScene] = useState<Scene>(() => {
+    if (typeof window === "undefined" || mode !== "game") return { name: "intro" };
+    const params = new URLSearchParams(window.location.search);
+    const mission = params.get("mission");
+    if (isMissionId(mission)) return { name: "mission", id: mission };
+    return params.get("tour") === "1" ? { name: "tour" } : { name: "intro" };
+  });
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [playerAt, setPlayerAt] = useState<DistrictId | null>(null);
   const history = useRef<Scene[]>([]);
@@ -62,6 +68,15 @@ export function CityProvider({ children }: { children: ReactNode }) {
   sceneRef.current = scene;
 
   useEffect(() => saveProgress(progress), [progress]);
+
+  const trackedMissions = useRef(progress.missions);
+  useEffect(() => {
+    const previous = trackedMissions.current;
+    trackedMissions.current = progress.missions;
+    for (const id of progress.missions) {
+      if (!previous.includes(id)) trackMissionComplete(id);
+    }
+  }, [progress.missions]);
 
   const trackedEntry = useRef(false);
   useEffect(() => {
@@ -80,8 +95,15 @@ export function CityProvider({ children }: { children: ReactNode }) {
     const url = new URL(window.location.href);
     if (mode === "recruiter") url.searchParams.set("mode", "recruiter");
     else url.searchParams.delete("mode");
-    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-  }, [mode]);
+    if (mode === "game" && scene.name === "mission") url.searchParams.set("mission", scene.id);
+    else url.searchParams.delete("mission");
+    if (mode === "game" && scene.name === "tour") url.searchParams.set("tour", "1");
+    else url.searchParams.delete("tour");
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.history.replaceState(window.history.state, "", next);
+    }
+  }, [mode, scene]);
 
   useEffect(() => {
     const original = document.title;

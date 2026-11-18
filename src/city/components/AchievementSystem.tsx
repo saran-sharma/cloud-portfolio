@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react";
-import { Award, Lock, X } from "lucide-react";
+import { Award, Copy, Lock, X } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { BADGES } from "@/city/state/game-state";
-import { DISTRICTS } from "@/city/data/districts";
+import { BADGES, explorerSummary } from "@/city/state/game-state";
+import { DISTRICTS, MISSIONS } from "@/city/data/districts";
 import { portfolio } from "@/data/portfolio";
 import { useCity } from "@/city/state/CityProvider";
 
 export const ProgressTracker = () => {
   const { xp, maxXp, percent, badges, progress, reset } = useCity();
   const [confirm, setConfirm] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "manual">("idle");
+  const summary = explorerSummary(progress);
+  const copySummary = async () => {
+    try {
+      if (!navigator.clipboard?.writeText) {
+        setCopyState("manual");
+        return;
+      }
+      await navigator.clipboard.writeText(summary);
+      setCopyState("copied");
+    } catch {
+      setCopyState("manual");
+    }
+  };
   return (
-    <Dialog onOpenChange={() => setConfirm(false)}>
+    <Dialog onOpenChange={() => { setConfirm(false); setCopyState("idle"); }}>
       <DialogTrigger asChild>
         <button type="button" className="sc-xp" aria-label={`Progress: ${xp} XP, ${percent} percent explored`}>
           <span className="sc-xp-bar" aria-hidden="true"><i style={{ width: `${percent}%` }} /></span>
@@ -27,7 +41,7 @@ export const ProgressTracker = () => {
           <p><b>{xp}</b> of {maxXp} XP · {percent}% explored</p>
           <ul>
             <li>{progress.discovered.length} of {DISTRICTS.length} districts discovered</li>
-            <li>{progress.missions.length} of 7 missions complete</li>
+            <li>{progress.missions.length} of {Object.keys(MISSIONS).length} missions complete</li>
             <li>{progress.projects.length} of {portfolio.projects.length} case studies read</li>
           </ul>
         </div>
@@ -47,6 +61,17 @@ export const ProgressTracker = () => {
             );
           })}
         </ul>
+        <div className="sc-explorer-share">
+          <button type="button" className="sc-btn is-quiet" onClick={copySummary}><Copy size={16} aria-hidden="true" /> Copy explorer summary</button>
+          <p className="sc-note">Shares only progress counts and badge names.</p>
+          {copyState === "copied" && <p className="sc-note" role="status">Explorer summary copied.</p>}
+          {copyState === "manual" && (
+            <>
+              <p className="sc-note" role="status">Clipboard unavailable. Select and copy the summary below.</p>
+              <textarea aria-label="Explorer summary" value={summary} readOnly rows={6} onFocus={(event) => event.currentTarget.select()} />
+            </>
+          )}
+        </div>
         <div className="sc-actions">
           {!confirm ? (
             <button type="button" className="sc-btn is-quiet" onClick={() => setConfirm(true)}>Reset progress</button>

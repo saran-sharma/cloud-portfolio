@@ -18,6 +18,7 @@ export const Nav = ({ onExploreCity }: { onExploreCity?: () => void }) => {
   const menuRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
+    if (typeof IntersectionObserver !== "function") return;
     const sections = links.map((link) => document.querySelector(link.href)).filter((section): section is HTMLElement => section instanceof HTMLElement);
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {

@@ -103,7 +103,7 @@ describe("world map and districts", () => {
     expect(screen.getByRole("button", { name: /Recruiter Mode/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Download resume" })).toBeInTheDocument();
     fireEvent.mouseEnter(screen.getByRole("button", { name: /^Data Docks, district/ }));
-    expect(screen.getByRole("tooltip")).toHaveTextContent("Mission: BUILD THE DATA PIPELINE");
+    expect(screen.getByRole("tooltip")).toHaveTextContent("Mission: PIPELINES AND DATA QUALITY");
   });
 
   it("navigates into every district, shows its content, and discovers it once", async () => {

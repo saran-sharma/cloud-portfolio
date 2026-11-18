@@ -1,4 +1,5 @@
 import { track } from "@vercel/analytics";
+import type { MissionId } from "@/city/types";
 
 /**
  * Custom events for Vercel Web Analytics. Properties are short, fixed labels only:
@@ -19,10 +20,12 @@ const send = (name: string, properties?: Record<string, string | number | boolea
   else run();
 };
 
-export type ResumeSource = "recruiter_hero" | "contact" | "assistant" | "game_hud" | "game_intro" | "game_hq" | "game_dossier";
+export type ResumeSource = "recruiter_hero" | "contact" | "assistant" | "game_hud" | "game_intro" | "game_hq" | "game_dossier" | "game_tour";
 
 export const trackResumeDownload = (source: ResumeSource) => send("resume_download", { source });
 
 export type RecruiterSource = "direct_link" | "game";
 
 export const trackRecruiterModeOpen = (source: RecruiterSource, from?: string) => send("recruiter_mode_open", from ? { source, from } : { source });
+
+export const trackMissionComplete = (mission: MissionId) => send("mission_complete", { mission });

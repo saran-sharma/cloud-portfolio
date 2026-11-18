@@ -1,6 +1,10 @@
 export type DistrictId = "data-docks" | "cloud-heights" | "automation-works" | "neon-ai-labs" | "operations-hq" | "headquarters";
 
-export type MissionId = "pipeline" | "cost" | "incident" | "storage" | "pim" | "mcp" | "engineer";
+export type ScenarioMissionId =
+  | "backfill-planner" | "least-privilege" | "terraform-review" | "runbook-builder"
+  | "kql-detective" | "agent-review" | "platform-day";
+
+export type MissionId = "pipeline" | "cost" | "incident" | "storage" | "pim" | "mcp" | "engineer" | "harbor-dispatch" | ScenarioMissionId;
 
 export type BadgeId =
   | "data-explorer"
@@ -16,6 +20,7 @@ export type Scene =
   | { name: "intro" }
   | { name: "profile" }
   | { name: "map" }
+  | { name: "tour" }
   | { name: "district"; id: DistrictId; intro?: boolean }
   | { name: "mission"; id: MissionId };
 

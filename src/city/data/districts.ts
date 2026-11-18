@@ -16,8 +16,8 @@ export const DISTRICTS: District[] = [
     environment: "docks",
     specialties: ["Azure Data Factory", "ADLS Gen2", "Azure Databricks", "PySpark", "Delta Lake", "Azure Synapse Analytics", "Microsoft Fabric"],
     projectIds: ["data-platform", "fmcp-dashboard", "ideas"],
-    missionIds: ["pipeline"],
-    missionHeadline: "BUILD THE DATA PIPELINE",
+    missionIds: ["pipeline", "harbor-dispatch", "backfill-planner"],
+    missionHeadline: "PIPELINES AND DATA QUALITY",
   },
   {
     id: "cloud-heights",
@@ -31,7 +31,7 @@ export const DISTRICTS: District[] = [
     environment: "heights",
     specialties: ["Azure infrastructure", "Azure Storage", "Virtual networks", "Azure security", "Key Vault", "Microsoft Entra ID", "Azure Monitor"],
     projectIds: ["storage-modernization"],
-    missionIds: ["storage"],
+    missionIds: ["storage", "least-privilege"],
     missionHeadline: "DESIGN A RELIABLE CLOUD PLATFORM",
   },
   {
@@ -46,7 +46,7 @@ export const DISTRICTS: District[] = [
     environment: "works",
     specialties: ["Terraform", "ARM templates", "Azure DevOps", "CI/CD", "PowerShell", "Azure CLI", "Privileged Identity Management"],
     projectIds: ["access-review"],
-    missionIds: ["pim"],
+    missionIds: ["pim", "terraform-review"],
     missionHeadline: "AUTOMATE THE WORKFLOW",
   },
   {
@@ -61,7 +61,7 @@ export const DISTRICTS: District[] = [
     environment: "labs",
     specialties: ["OpenAI", "Azure AI Foundry", "Copilot Studio", "Model Context Protocol", "GPT-based agents"],
     projectIds: ["incident-intelligence", "copilot-mcp"],
-    missionIds: ["incident", "mcp"],
+    missionIds: ["incident", "mcp", "agent-review"],
     missionHeadline: "EXPLORE INTELLIGENT SYSTEMS",
   },
   {
@@ -76,7 +76,7 @@ export const DISTRICTS: District[] = [
     environment: "ops",
     specialties: ["KQL", "Azure Monitor", "Log Analytics", "SQL", "Power BI", "Cost intelligence", "Incident investigation"],
     projectIds: ["operational-health"],
-    missionIds: ["cost"],
+    missionIds: ["cost", "runbook-builder", "kql-detective"],
     missionHeadline: "INVESTIGATE THE PLATFORM",
   },
   {
@@ -91,7 +91,7 @@ export const DISTRICTS: District[] = [
     environment: "hq",
     specialties: ["Data Platform Engineer", "Capgemini", "AZ-104", "M.Tech, BITS Pilani WILP", "Resume", "Contact"],
     projectIds: ["gymflow-ai"],
-    missionIds: ["engineer"],
+    missionIds: ["engineer", "platform-day"],
     missionHeadline: "MEET THE ENGINEER",
   },
 ];
@@ -139,6 +139,20 @@ export const MISSIONS: Record<MissionId, MissionInfo> = {
     objective: "Send simulated requests through an enterprise integration and see where each one succeeds or stops.",
     districtId: "neon-ai-labs",
   },
+  "harbor-dispatch": {
+    id: "harbor-dispatch",
+    number: "07",
+    title: "Harbor Dispatch",
+    objective: "Take the night shift at Data Docks. Route incoming records and close a clean shipping manifest.",
+    districtId: "data-docks",
+  },
+  "backfill-planner": { id: "backfill-planner", number: "08", title: "Backfill Planner", objective: "Recover missing partitions without replaying work that already succeeded.", districtId: "data-docks" },
+  "least-privilege": { id: "least-privilege", number: "09", title: "Least-Privilege Lab", objective: "Match each fictional identity to the smallest role and scope it needs.", districtId: "cloud-heights" },
+  "terraform-review": { id: "terraform-review", number: "10", title: "Terraform Plan Review", objective: "Read a mock change plan and catch an unexpected replacement before apply.", districtId: "automation-works" },
+  "runbook-builder": { id: "runbook-builder", number: "11", title: "Runbook Builder", objective: "Build a recovery runbook from evidence, safe mitigation and a verification step.", districtId: "operations-hq" },
+  "kql-detective": { id: "kql-detective", number: "12", title: "KQL Detective", objective: "Follow a signal through a small fictional log sample and choose the query that isolates it.", districtId: "operations-hq" },
+  "agent-review": { id: "agent-review", number: "13", title: "Agent Review", objective: "Review AI suggestions against the evidence. Approve only what you can support.", districtId: "neon-ai-labs" },
+  "platform-day": { id: "platform-day", number: "14", title: "Platform Day", objective: "A cross-district capstone. Carry a single incident from intake to recovery and handoff.", districtId: "headquarters" },
   engineer: {
     id: "engineer",
     number: "HQ",
@@ -151,3 +165,5 @@ export const MISSIONS: Record<MissionId, MissionInfo> = {
 export const getDistrict = (id: DistrictId) => DISTRICTS.find((district) => district.id === id) as District;
 
 export const districtForMission = (id: MissionId) => getDistrict(MISSIONS[id].districtId);
+
+export const isMissionId = (id: string | null): id is MissionId => id !== null && Object.prototype.hasOwnProperty.call(MISSIONS, id);

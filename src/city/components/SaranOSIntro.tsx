@@ -166,6 +166,7 @@ export const SaranOSIntro = () => {
           <nav className="sc-menu" aria-label="Main menu">
             <button type="button" onClick={() => go({ name: "profile" })}><Play size={18} /> Start your journey</button>
             <button type="button" onClick={() => go({ name: "map" })}><Compass size={18} /> Enter Saran Universe</button>
+            <button type="button" onClick={() => go({ name: "tour" })}><Compass size={18} aria-hidden="true" /> 3-minute tour</button>
             <button type="button" onClick={() => setMode("recruiter")}><Users size={18} /> Recruiter Mode</button>
             <a href={portfolio.profile.resumeUrl} download onClick={() => trackResumeDownload("game_intro")}><Download size={18} /> Download resume</a>
           </nav>

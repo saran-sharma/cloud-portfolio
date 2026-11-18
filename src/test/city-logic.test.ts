@@ -56,8 +56,10 @@ describe("city configuration", () => {
     expect([...placed].sort()).toEqual([...projectIds].sort());
   });
 
-  it("has the six engineering missions plus the HQ dossier", () => {
-    expect(Object.keys(MISSIONS).sort()).toEqual(["cost", "engineer", "incident", "mcp", "pim", "pipeline", "storage"]);
+  it("places every mission in one district", () => {
+    const placed = DISTRICTS.flatMap((district) => district.missionIds);
+    expect(placed).toHaveLength(15);
+    expect([...placed].sort()).toEqual(Object.keys(MISSIONS).sort());
   });
 });
 
