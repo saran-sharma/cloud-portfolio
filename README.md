@@ -62,9 +62,8 @@ Portfolios tend to inflate. This one has rules:
 - No invented screenshots, metrics, savings or production claims.
 - Internal names, identifiers, tenants, endpoints and financial data are left out.
 - Open questions live in [docs/content-todo.md](docs/content-todo.md) (not shown on the site).
-  Known one: my resume still says "Senior Cloud & DevOps Engineer" while the site says
-  "Data Platform Engineer | AI & Cloud". `public/resume.pdf` is the older resume. Both are my
-  call to make.
+- The [public resume](public/resume.pdf) leads with Azure Data Platform Engineer and keeps the
+  Capgemini job title in the employment history. It omits client names and exact internal figures.
 
 Content lives in [src/data/portfolio.ts](src/data/portfolio.ts). Project diagrams are native HTML
 and CSS in [ProjectVisual.tsx](src/components/ProjectVisual.tsx), so they stay readable on a
