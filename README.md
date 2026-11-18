@@ -27,6 +27,8 @@ at any time and the site remembers where you were.
 
 1. **The opening.** A short cinematic, then a menu: *Start your journey*, *Enter Saran
    Universe*, *Recruiter Mode*, *Download resume*. Skip it any time. Replay it if you liked it.
+   From any in-game screen, use **Home** to return to the title menu without replaying the
+   cinematic or resetting saved progress. **Map** still returns straight to the district map.
 2. **The player profile.** Meet the protagonist (that's me, illustrated).
 3. **The map.** Six districts, each home to real portfolio projects:
    - **Data Docks:** *Where data comes ashore.*

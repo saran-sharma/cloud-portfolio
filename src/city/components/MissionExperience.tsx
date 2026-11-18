@@ -25,7 +25,7 @@ const isScenario = (id: MissionId): id is ScenarioMissionId => !Object.prototype
 export const MissionExperience = ({ id }: { id: MissionId }) => {
   const info = MISSIONS[id];
   const district = districtForMission(id);
-  const { progress, completeMission, go, home } = useCity();
+  const { progress, completeMission, go, goToMap } = useCity();
   const done = progress.missions.includes(id);
   const onComplete = useCallback(() => completeMission(id), [completeMission, id]);
   const scenario = isScenario(id);
@@ -53,7 +53,7 @@ export const MissionExperience = ({ id }: { id: MissionId }) => {
 
       <footer className="sc-mission-foot">
         <button type="button" className="sc-btn is-quiet" onClick={() => go({ name: "district", id: district.id, intro: false })}><ArrowLeft size={16} /> Back to {district.name}</button>
-        <button type="button" className="sc-btn is-quiet" onClick={home}><MapIcon size={16} /> City map</button>
+        <button type="button" className="sc-btn is-quiet" onClick={goToMap}><MapIcon size={16} /> City map</button>
       </footer>
 
       <MiniMap current={district.id} />

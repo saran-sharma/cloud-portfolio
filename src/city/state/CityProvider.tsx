@@ -29,7 +29,8 @@ type CityContextValue = {
   canGoBack: boolean;
   go: (scene: Scene) => void;
   back: () => void;
-  home: () => void;
+  goHome: () => void;
+  goToMap: () => void;
   setMode: (mode: Mode, anchor?: string) => void;
   takeScrollTarget: (mode: Mode) => { y: number; anchor: string | null };
   discoverDistrict: (id: DistrictId) => boolean;
@@ -135,7 +136,13 @@ export function CityProvider({ children }: { children: ReactNode }) {
     setScene(previous ? previous : { name: "map" });
   }, []);
 
-  const home = useCallback(() => {
+  const goHome = useCallback(() => {
+    history.current = [];
+    dispatch({ type: "intro-seen" });
+    setScene({ name: "intro" });
+  }, []);
+
+  const goToMap = useCallback(() => {
     history.current = [];
     setScene({ name: "map" });
   }, []);
@@ -184,7 +191,8 @@ export function CityProvider({ children }: { children: ReactNode }) {
       canGoBack: history.current.length > 0,
       go,
       back,
-      home,
+      goHome,
+      goToMap,
       setMode,
       takeScrollTarget,
       discoverDistrict,
@@ -194,7 +202,7 @@ export function CityProvider({ children }: { children: ReactNode }) {
       reset,
       dismissToast,
     };
-  }, [mode, scene, playerAt, progress, badges, toasts, go, back, home, setMode, takeScrollTarget, discoverDistrict, openProject, completeMission, markIntroSeen, reset, dismissToast]);
+  }, [mode, scene, playerAt, progress, badges, toasts, go, back, goHome, goToMap, setMode, takeScrollTarget, discoverDistrict, openProject, completeMission, markIntroSeen, reset, dismissToast]);
 
   return <CityContext.Provider value={value}>{children}</CityContext.Provider>;
 }

@@ -131,6 +131,23 @@ describe("Saran Universe opening video", () => {
     expect(screen.getByRole("button", { name: /Replay intro/ })).toBeInTheDocument();
   });
 
+  it("opens the title without autoplay from a first-visit mission link and still offers replay", async () => {
+    mockMedia(desktop);
+    window.history.replaceState(null, "", "/?mission=platform-day&source=share");
+    const { container } = render(<CityApp />);
+    expect(await screen.findByRole("heading", { level: 1, name: "Platform Day" })).toBeInTheDocument();
+    expect(progress().introSeen).toBe(false);
+
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    expect(screen.getByRole("navigation", { name: "Main menu" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Skip intro" })).not.toBeInTheDocument();
+    expect(window.location.search).toBe("?source=share");
+    expect(findVideo(container)).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Replay intro" }));
+    expect(findVideo(container)).not.toBeNull();
+  });
+
   it("falls back to the code-based intro with the character art when the file fails", () => {
     mockMedia(desktop);
     const { container } = renderIntro();

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ChevronDown, Download, Home, Users } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, Home, Map, Users } from "lucide-react";
 import { DISTRICTS } from "@/city/data/districts";
 import { ProgressTracker } from "@/city/components/AchievementSystem";
 import { useCity } from "@/city/state/CityProvider";
@@ -8,17 +8,21 @@ import { trackResumeDownload } from "@/lib/analytics";
 
 /** Persistent in-game navigation. Recruiter Mode is always one click away. */
 export const GameNavigation = () => {
-  const { scene, canGoBack, back, home, go, setMode } = useCity();
+  const { scene, canGoBack, back, goHome, goToMap, go, setMode } = useCity();
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sc-hud">
       <div className="sc-hud-left">
-        <button type="button" className="sc-hud-brand" onClick={home} aria-label="SARAN.OS, go to the city map">SARAN<span>.OS</span></button>
+        <button type="button" className="sc-hud-btn is-home" onClick={goHome} title="Back to the title screen">
+          <span className="sc-hud-brand" aria-hidden="true">SARAN<span>.OS</span></span>
+          <Home size={16} aria-hidden="true" />
+          <span className="sc-hud-home-label">Home</span>
+        </button>
         {scene.name !== "map" && (
           <>
-            <button type="button" className="sc-hud-btn" aria-label={canGoBack ? "Back to the previous screen" : "Back to the city map"} onClick={canGoBack ? back : home}><ArrowLeft size={16} aria-hidden="true" /> <span>Back</span></button>
-            <button type="button" className="sc-hud-btn" aria-label="Map" onClick={home}><Home size={16} aria-hidden="true" /> <span>Map</span></button>
+            <button type="button" className="sc-hud-btn" aria-label={canGoBack ? "Back to the previous screen" : "Back to the city map"} onClick={canGoBack ? back : goToMap}><ArrowLeft size={16} aria-hidden="true" /> <span>Back</span></button>
+            <button type="button" className="sc-hud-btn" aria-label="Map" title="City map" onClick={goToMap}><Map size={16} aria-hidden="true" /> <span>Map</span></button>
           </>
         )}
         <div className="sc-hud-menu">
@@ -41,7 +45,7 @@ export const GameNavigation = () => {
       <div className="sc-hud-right">
         <ProgressTracker />
         <a className="sc-hud-btn is-resume" href={portfolio.profile.resumeUrl} download aria-label="Download resume" onClick={() => trackResumeDownload("game_hud")}><Download size={16} aria-hidden="true" /> <span>Resume</span></a>
-        <button type="button" className="sc-recruiter" onClick={() => setMode("recruiter")}><Users size={16} /> <span>Recruiter Mode</span></button>
+        <button type="button" className="sc-recruiter" aria-label="Recruiter Mode" onClick={() => setMode("recruiter")}><Users size={16} aria-hidden="true" /> <span>Recruiter<span className="sc-hud-mode-label"> Mode</span></span></button>
       </div>
     </header>
   );

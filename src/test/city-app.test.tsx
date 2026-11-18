@@ -106,6 +106,22 @@ describe("world map and districts", () => {
     expect(screen.getByRole("tooltip")).toHaveTextContent("Mission: PIPELINES AND DATA QUALITY");
   });
 
+  it("keeps Map separate from Home and preserves progress when returning to the title", async () => {
+    render(<App />);
+    await openMap();
+    await enterDistrict("Data Docks");
+    const saved = stored();
+    expect(saved.discovered).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Map" }));
+    expect(screen.getByRole("heading", { name: "Choose a district" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Home" }));
+    expect(screen.getByRole("navigation", { name: "Main menu" })).toBeInTheDocument();
+    expect(screen.getByRole("main")).toHaveFocus();
+    expect(stored()).toEqual(saved);
+  });
+
   it("navigates into every district, shows its content, and discovers it once", async () => {
     render(<App />);
     await openMap();
